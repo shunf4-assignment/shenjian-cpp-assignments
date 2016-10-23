@@ -90,7 +90,6 @@ int main()
 	cout << "Ê±ÖÓ¼ÆÊı£º" << double(fc_end.QuadPart - fc_begin.QuadPart) << endl;
 	double secplus = double(fc_end.QuadPart - fc_begin.QuadPart) / double(tick.QuadPart);
 	cout << setprecision(6) << secplus << "Ãë" << endl;
-	system("pause");
 
 	return 0;
 }
