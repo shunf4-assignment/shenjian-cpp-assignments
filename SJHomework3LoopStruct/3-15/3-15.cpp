@@ -10,7 +10,7 @@ int main()
 	m = 0, n = 0, leftNum = 0, rightNum = 0, tempVar = 0;
 
 	//开始输入m和n。
-	cout << "请依次输入两个正整数 m 和 n，可以用空格或回车隔开：";
+	cout << "请依次输入两个正整数 m 和 n(乘积小于2^32)，可以用空格或回车隔开：";
 	cin >> m >> n;
 
 	leftNum = m;
@@ -27,9 +27,10 @@ int main()
 	greatestCommonDivisor = rightNum;
 
 	//最小公倍数非常好求
-	if (greatestCommonDivisor != 0 && m*n != 0)
+	if (greatestCommonDivisor != 0 && m != 0 && n != 0)
 	{
 		leastCommonMultiple = m * n / greatestCommonDivisor;
+
 		cout << "计算结果：" << endl;
 		cout << "\t最大公约数： " << greatestCommonDivisor << endl;
 		cout << "\t最小公倍数： " << leastCommonMultiple << endl;
