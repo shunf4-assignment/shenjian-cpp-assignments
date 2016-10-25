@@ -1,0 +1,2 @@
+#include <iostream>
+int main() { for (int i = ((std::cout << "¾Å¾Å³Ë·¨±í" << std::endl), 1); i <= 9; i++) for (int j = 1; j <= i; j++)(std::cout << j << "x" << i << "=" << (i*j) << " ", (j == i) && (std::cout << std::endl)); }
