@@ -11,7 +11,8 @@ using namespace std;
 int main()
 {
 	int userNum, currMaximumOwner, i;
-	double money, moneyCopy, moneyThisPerson, randomX, randomY, randomZ, randomA, currMaximum = 0;
+	double money, moneyCopy, moneyThisPerson, randomX, randomY, randomZ, randomA, currMaximum = 0, moneyAverage = 0;
+	bool randomBonus = false;
 
 	cout << "拼手气红包" << endl;
 	cout << "请输入人数：";
@@ -21,7 +22,12 @@ int main()
 	cout << "请输入支付密码：jj520" << endl;
 	cout << endl;
 
+
+	moneyAverage = money / userNum;
+
 	srand((unsigned int)(time(0)));
+	rand();
+	rand();
 start:
 
 
@@ -41,9 +47,14 @@ start:
 		randomY = (rand() * 1. / 32767);
 		randomZ = (rand() * 1. / 32767);
 		randomA = (rand() * 1. / 32767);
-		moneyThisPerson = moneyCopy * randomX * 2 / (userNum - i);
-		if (randomA <= ((1 - randomY) / sqrt(userNum - i +1) / sqrt(userNum)))
-			moneyThisPerson = moneyCopy * randomY;
+		randomBonus = false;
+		moneyThisPerson = moneyCopy / (userNum - i) * exp((randomX - 0.5) / (1.8 * pow((userNum - i) / userNum * 1.3 + 0.6, 1. / 2)));
+		if (randomA <= ((1 - randomY) / sqrt(userNum - i + 1) / sqrt(userNum - i + 1) / sqrt(userNum)))
+		{
+			randomBonus = true;
+			moneyThisPerson = moneyCopy / 2 * exp((randomX - 0.5) / (1.6 * pow((userNum - i) / userNum * 1.3 + 0.6, 1. / 2)));
+		}
+			
 		moneyThisPerson = int(moneyThisPerson * 100 + 0.5) * 1. / 100; //舍去第二位小数的后面
 
 		if (i == userNum - 1)
@@ -52,7 +63,7 @@ start:
 		if (moneyThisPerson < 0.01)
 			moneyThisPerson = 0.01;
 
-		if ((userNum - (i + 1)) != 0 && fabs((moneyCopy - moneyThisPerson) / (userNum - (i + 1))) < 0.01)
+		if ((userNum - (i + 1)) != 0 && ((moneyCopy - moneyThisPerson) / (userNum - (i + 1))) < 0.01)
 			moneyThisPerson = moneyCopy - (userNum - (i + 1)) * 0.01;
 
 		moneyCopy -= moneyThisPerson;
@@ -84,6 +95,8 @@ start:
 			cout << "玩家 " << i + 1;
 		cout << "   抢到了 ￥" << moneyThisPerson;
 		cout << " 还剩 " << moneyCopy;
+		if (randomBonus)
+			cout << "*";
 		cout << endl;
 
 		
@@ -118,6 +131,8 @@ start:
 
 	cout << " 是手气王，TA抢到了 ￥";
 	cout << setiosflags(ios::fixed) << setprecision(2) << currMaximum << endl;
+
+	//getchar(); goto start;
 
 	return 0;
 }
