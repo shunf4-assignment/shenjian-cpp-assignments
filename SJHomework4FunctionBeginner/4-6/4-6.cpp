@@ -45,6 +45,6 @@ int main()
 	a = 1, b = 2, c = 3, d = 4;
 	root = newtonMethod(a, b, c, d, 1);
 
-	cout << "方程在1附近的一个根为： x = " << root << endl;
+	cout << "方程在 1 附近的一个根为： x = " << root << endl;
 	return 0;
 }
