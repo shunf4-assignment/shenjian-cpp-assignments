@@ -83,13 +83,9 @@ int main()
 		keyInput = _getch();
 		nextX = currentX;
 		nextY = currentY;
-		if (keyInput == 'q')
+		if (keyInput == 'q' || keyInput == 'Q')
 			break;
-		if (keyInput == ' ')
-		{
-			putchar(' ');
-			gotoxy(hout, nextX, nextY);  //输出字符后会前进一格，退回去
-		}
+		
 		if (keyInput == 0xe0) //方向键会以0xe0起始
 		{
 			keyInput = _getch();  //这个时候再读一个
@@ -112,6 +108,12 @@ int main()
 			gotoxy(hout, nextX, nextY);
 			currentX = nextX;
 			currentY = nextY;
+			continue;
+		}
+		if (keyInput)
+		{
+			putchar((char)keyInput);
+			gotoxy(hout, nextX, nextY);  //输出字符后会前进一格，退回去
 		}
 
 	}

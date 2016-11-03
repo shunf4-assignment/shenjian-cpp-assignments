@@ -83,7 +83,7 @@ int main()
 		keyInput = _getch();
 		nextX = currentX;
 		nextY = currentY;
-		if (keyInput == 'q')
+		if (keyInput == 'q' || keyInput == 'Q')
 			break;
 		if (keyInput == ' ')
 		{
@@ -93,15 +93,19 @@ int main()
 		switch (keyInput)
 		{
 			case ('i'):
+			case ('I'):
 				nextY = getNewCoord(false, currentY, -1);
 				break;
 			case ('k'):
+			case ('K'):
 				nextY = getNewCoord(false, currentY, 1);
 				break;
 			case ('j'):
+			case ('J'):
 				nextX = getNewCoord(true, currentX, -1);
 				break;
 			case ('l'):
+			case ('L'):
 				nextX = getNewCoord(true, currentX, 1);
 				break;
 					
