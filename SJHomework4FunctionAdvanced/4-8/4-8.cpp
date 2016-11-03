@@ -18,21 +18,27 @@ double legendre(int n, double x)
 int main()
 {
 	int n;
+	bool valid;
 	double x, result;
 
 	do
 	{
+		valid = true;
 		cout << "请分别输入n x的值，空格隔开：";
 		cin >> n >> x;
 		if (cin.rdstate() != ios_base::failbit) {
-			break;
+			valid = true;
 		}
 		else
 		{
+			valid = false;
 			cin.clear();
 			cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
 		}
-	} while (1);
+
+		if (n <= 0)
+			valid = false;
+	} while (!valid);
 
 	result = legendre(n, x);
 	cout << "P_" << n << "(" << x << ") = " << result << endl;

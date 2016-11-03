@@ -1,6 +1,5 @@
 /* 1652270 计算机2班 冯舜 */
 #include <iostream>
-#include <cmath>  //由于程序要用到数学函数sqrt，故应包含头文件cmath
 using namespace std;
 
 double minusTerm(double a, double b, double c, double d, double x)

@@ -14,20 +14,25 @@ int fac(int n)
 int main()
 {
 	int a, b, c, result;
+	bool valid;
 
 	do
 	{
+		valid = true;
 		cout << "请分别输入a b c的值，空格隔开：";
 		cin >> a >> b >> c;
-		if (cin.rdstate() != ios_base::failbit) {
-			break;
-		}
-		else
+
+		if (!cin.good())
 		{
+			valid = false;
 			cin.clear();
 			cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
 		}
-	} while (1);
+
+		if (a < 0 || b < 0 || c < 0)
+			valid = false;
+	} while (!valid);
+
 
 	result = fac(a) + fac(b) + fac(c);
 	cout << "a! + b! + c! = " << result << endl;

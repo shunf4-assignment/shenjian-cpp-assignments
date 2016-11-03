@@ -50,8 +50,23 @@ int main()
 //REINPUT:
 	bool startToPrintOut = false;  //用来指示程序有没有开始输出了，没有这个的话，输出"10"会当作前面有东西进而输出“零拾”
 
-	cout << "请输入待转换的金额数：(0.01到100亿) ";
-	cin >> inputNum;
+	while (1) {
+		cout << "请输入待转换的金额数：(0.01到100亿) ";
+		cin >> inputNum;
+
+		if (!cin.good())
+		{
+			cin.clear();
+			cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
+		}
+		else
+		{
+			if (inputNum >= 0)
+				break;
+			else
+				continue;
+		}
+	}
 	inputNumCopy = inputNum;
 
 	inputNumCopy -= (d10 = (int)(inputNumCopy / 1e9)) * 1e9;

@@ -32,19 +32,25 @@ void HanoiStep(char origin, char dest, int totalNum)
 int main()
 {
 	int n;
+	bool valid;
+
 	do
 	{
+		valid = true;
 		cout << "初始 A 塔有多少层圆盘：";
 		cin >> n;
-		if (cin.rdstate() != ios_base::failbit) {
-			break;
-		}
-		else
+
+		if (!cin.good())
 		{
+			valid = false;
 			cin.clear();
 			cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
 		}
-	} while (1);
+
+		if (n < 1)
+			valid = false;
+	} while (!valid);
+	
 	//totalMove = 0;
 	HanoiStep('A', 'C', n);
 	//cout << "总共移动 " << totalMove << " 步。" << endl;
