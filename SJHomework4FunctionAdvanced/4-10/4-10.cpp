@@ -22,7 +22,7 @@ int main()
 
 	while (true)
 	{
-		cout << "快输入一个正数n：";
+		cout << "快输入一个整数n：";
 		cin >> n;
 
 		if (!cin.good())

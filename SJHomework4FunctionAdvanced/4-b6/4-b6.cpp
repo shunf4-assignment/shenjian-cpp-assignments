@@ -35,7 +35,11 @@ int main()
 		}
 
 		if (n < 0)
+		{
 			valid = false;
+			cout << "输入超出范围，请重新输入。" << endl;
+			cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
+		}
 
 	} while (!valid);
 
