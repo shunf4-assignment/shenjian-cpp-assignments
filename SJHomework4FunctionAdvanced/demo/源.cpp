@@ -4,9 +4,5 @@ using namespace std;
 
 int main()
 {
-	int n;
-	cin >> n;
-	cin.clear();
-	cin.ignore();
-	cout << n << endl;
+	cout << (char)0b1111 << endl;
 }
