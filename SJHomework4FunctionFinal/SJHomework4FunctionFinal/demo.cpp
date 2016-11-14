@@ -1,10 +1,40 @@
 /* 1652270 ¼ÆËã»ú2°à ·ëË´ */
 #include <iostream>
+#include <cmath>
 using namespace std;
 
-int outer_function(int param)
+int fac(int n)
 {
-	return param;
+	int r = 1;
+	while (n > 1)
+	{
+		r *= n--;
+	}
+	return r;
+}
+
+int getDigit(int n, int digit, int allDigit = -1)
+{
+	if (allDigit == -1)
+	{
+		allDigit = (int)log10(n) + 1;
+	}
+
+	return n / (int)pow(10, allDigit - 1 - digit) % 10;
+}
+
+int fullArrangement(int digitNum, int seqNum)
+{
+	if (digitNum == 1)
+		return 1;
+
+	int prevNum, keyTenPow, toInsertDigit, nowNum;
+	prevNum = fullArrangement(digitNum - 1, seqNum / digitNum);
+	toInsertDigit = seqNum % digitNum;
+	keyTenPow = (int)pow(10, toInsertDigit);
+	nowNum = (prevNum / keyTenPow * 10 + digitNum) * keyTenPow + prevNum % keyTenPow;
+
+	return nowNum;
 }
 
 int main()
@@ -36,9 +66,18 @@ int main()
 		}
 
 	} while (!valid);
-
-	cout << outer_function(n);
-	cout << endl;
+	//cout << fac(n);
+	for (int x = 0; x < fac(n); x++)
+	{
+		int thisFullArr = fullArrangement(n, x);
+		for (int j = 0; j < n; j++)
+		{
+			(j != 0) && (cout << " ");
+			cout << getDigit(thisFullArr, j, n);
+		}
+		cout << endl;
+	}
+	
 	//goto REINPUT;
 	return 0;
 }

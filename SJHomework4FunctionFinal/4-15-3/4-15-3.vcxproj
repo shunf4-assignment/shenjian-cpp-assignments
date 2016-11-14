@@ -18,15 +18,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="demo.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{efb80652-345f-4373-b7c1-2879c1050563}</ProjectGuid>
-    <RootNamespace>SJHomework4FunctionFinal</RootNamespace>
+    <ProjectGuid>{b92cf3dc-722f-432b-8e31-6b97889a6e38}</ProjectGuid>
+    <RootNamespace>_4_15_3</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
