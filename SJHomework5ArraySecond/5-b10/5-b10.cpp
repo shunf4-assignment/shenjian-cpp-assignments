@@ -11,6 +11,7 @@ int main()
 	int i;
 	bool upper = true;
 	bool first = true;
+	cout << "ÇëÊäÈë£º";
 	while (true)
 	{
 		cin >> chara;

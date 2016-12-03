@@ -19,14 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="5-b7.cpp">
+    <ClCompile Include="x-x.cpp">
       <SubType>
       </SubType>
     </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9c2808c8-3fb9-435f-a1dc-852362717d31}</ProjectGuid>
-    <RootNamespace>_5_b7</RootNamespace>
+    <ProjectGuid>{7d61cbf8-910b-4889-bc64-d6f837d079f8}</ProjectGuid>
+    <RootNamespace>SJHomeworkArrayFinal</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -103,7 +103,6 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

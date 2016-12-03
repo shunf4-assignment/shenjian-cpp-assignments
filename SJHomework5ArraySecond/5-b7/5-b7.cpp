@@ -56,7 +56,8 @@ int Pop(int towerNum)
 void printTowerBase()
 {
 	gotoxy(baseMarginX, maxDisk + 3);
-	cout << "===================================";
+	cout << "===================================" << endl;
+	cout << "               A       B       C";
 }
 
 void printTowerGra(bool clean = true)
@@ -145,6 +146,7 @@ void HanoiInit(int origin, int dest, int totalNum)
 	}
 	towerPointer[origin] = totalNum;
 	system("cls");
+	cout << "从 " << char(origin + 'A') << " 移动到 " << char(dest + 'A') << " ，共 " << totalNum << " 层，延时设置为" << speed << "，" << (dispArr ? "": "不") << "显示内部数组值。";
 	printTowerBase();
 	printTowerGra();
 
