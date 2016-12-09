@@ -3,6 +3,7 @@
 #include <time.h>
 using namespace std;
 #define maxLen 16
+#define minLen 8
 
 int main()
 {
@@ -16,9 +17,9 @@ int main()
 
 	while (true)
 	{
-		cout << "请输入要生成的密码位数(12-16): ";
+		cout << "请输入要生成的密码位数(" << minLen << "-" << maxLen <<"): ";
 		cin >> d;
-		if (!cin.good() || d < 12 || d > maxLen)
+		if (!cin.good() || d < minLen || d > maxLen)
 		{
 			cout << "输入非法或超出范围，请重新输入。" << endl;
 			cin.clear();

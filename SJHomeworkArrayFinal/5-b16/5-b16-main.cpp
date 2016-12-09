@@ -375,7 +375,8 @@ int main()
      if (1) {
         char s1[]="This is a pencil.";
         char s2[]="aabbbceddbbbceeeff";
-        char s3[]="abcde";
+		char s3[] = "abcde";
+		char s4[]="abcde\0ab";
 
         cout << "tj_strrstr()ｲ簗ﾔｲｿｷﾖ｣ｺ" << endl;
         cout << "1.s1 ｵﾄﾊ莎ｦｸﾃﾊﾇ1｣ｬ ﾊｵｼﾊﾊﾇ｣ｺ" << tj_strrstr(s1, "T")      << endl;
@@ -389,7 +390,8 @@ int main()
         cout << "  s2 ｵﾄﾊ莎ｦｸﾃﾊﾇ13｣ｬﾊｵｼﾊﾊﾇ｣ｺ" << tj_strrstr(s2, "ce")     << endl;
         cout << "  s2 ｵﾄﾊ莎ｦｸﾃﾊﾇ13｣ｬﾊｵｼﾊﾊﾇ｣ｺ" << tj_strrstr(s2, "cee")    << endl;
         cout << "3.s3 ｵﾄﾊ莎ｦｸﾃﾊﾇ1｣ｬ ﾊｵｼﾊﾊﾇ｣ｺ" << tj_strrstr(s3, "abcde")  << endl;
-        cout << "  s3 ｵﾄﾊ莎ｦｸﾃﾊﾇ0｣ｬ ﾊｵｼﾊﾊﾇ｣ｺ" << tj_strrstr(s3, "abcdef") << endl;
+		cout << "  s3 ｵﾄﾊ莎ｦｸﾃﾊﾇ0｣ｬ ﾊｵｼﾊﾊﾇ｣ｺ" << tj_strrstr(s3, "abcdef") << endl;
+		cout << "  s3xxxx ｵﾄﾊ莎ｦｸﾃﾊﾇ?｣ｬ ﾊｵｼﾊﾊﾇ｣ｺ" << tj_strrstr(s4, "a") << endl;
 
 	wait_for_enter();
         }

@@ -141,7 +141,7 @@ int tj_strchr(const char str[], char ch)
 	while (str[i])
 	{
 		if (str[i] == ch)
-			return i+1;
+			return i + 1;
 		i++;
 	}
 	return 0; //return值可根据需要修改
@@ -192,7 +192,7 @@ int tj_strrstr(const char str[], const char substr[])
 	while (str[i])
 	{
 		if (str[i] == substr[j]) {
-			while (j>=0)
+			while (j >= 0)
 			{
 				j--;
 				if (!(str[i - (k - j)] == substr[j]))
