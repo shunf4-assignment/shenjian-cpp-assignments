@@ -8,7 +8,7 @@ using namespace std;
 
 #define row 4
 #define prespace 6
-#define space 3
+#define space 2
 #define halftitle (space + 2)*7 / 2 - 2
 #define gap 3
 #define column 3
