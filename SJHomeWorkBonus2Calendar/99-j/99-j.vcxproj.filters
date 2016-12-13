@@ -15,7 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="99-j.cpp">
+    <Text Include="input.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="99-calendar.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

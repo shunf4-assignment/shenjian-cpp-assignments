@@ -19,10 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="99-j.cpp">
+    <ClCompile Include="99-calendar.cpp">
       <SubType>
       </SubType>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="input.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{d04ce5fa-2866-42e5-8d3c-93bfd1b71e1d}</ProjectGuid>

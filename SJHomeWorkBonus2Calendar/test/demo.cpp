@@ -9,11 +9,8 @@ int outer_function(int param)
 
 int main()
 {
-	//REINPUT:
-	char a[] = "顺子顺子顺子顺子";
-	cout << a << endl;
-	cout << ((char *)((int)a + 1));
-	cout << endl;
-	//goto REINPUT;
+	char *p = "8910";
+	*(p + 1) = 'A';
+	cout << *(p) << endl;
 	return 0;
 }
