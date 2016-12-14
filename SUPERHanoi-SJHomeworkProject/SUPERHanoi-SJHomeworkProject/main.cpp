@@ -14,28 +14,25 @@ const int baseMarginX = 6;
 const char towerName[] = { 'A', 'B', 'C' };
 const int halfTowerGap = 4;
 const int colorHalfTowerGap = 4;
-const int textTowerBaseYOffset1 = 7;
-const int textTowerBaseYOffset2 = 7;
+const int textTowerBaseYOffset1 = 3;
+const int textTowerBaseYOffset2 = 3;
 const int drawTowerBaseYOffset = 3;
 const int towerDrawPreSpace = 6;
 const int towerDrawGap = 6;
 const int towerDrawLength = 2 * maxDisk + 5;
-const int colorList[] = { 0, COLOR_RED, COLOR_BLUE, COLOR_CYAN,COLOR_GREEN,COLOR_PINK,COLOR_HRED,COLOR_HBLUE,COLOR_HCYAN,COLOR_HGREEN,COLOR_HPINK };
+const int colorList[] = { 0, COLOR_RED, COLOR_BLUE, COLOR_CYAN,COLOR_GREEN,COLOR_PINK,COLOR_HRED,COLOR_HBLUE,COLOR_HCYAN,COLOR_HGREEN,COLOR_HPINK,1333,2444,3433 };
+const int defaultBg = COLOR_WHITE;
+const int defaultFg = COLOR_BLACK;
+const int defaultTw = COLOR_HYELLOW;
+const int speedList[] = { 1500, 800, 300, 100, 60, 20, 8, 2, 1, 0 };
 
 int totalMove = 0;
 int towers[3][maxDisk] = { { 0 },{ 0 },{ 0 } };
 int towerPointer[] = { 0,0,0 };  //指的是层数+1，也就是Push下一个圆盘应该在的位置
 
-void pause(int speed)
+void pause(int speed, bool faster = false)
 {
-	switch (speed)
-	{
-		case 0:
-			_getch();
-			break;
-		default:
-			Sleep(1010 - speed * 200);
-	}
+	Sleep(faster ? (speedList[speed % 10] / 4) : speedList[speed % 10]);
 }
 void pause_()
 {
@@ -43,6 +40,11 @@ void pause_()
 	system("pause>nul");
 	freopen("in.txt", "r", stdin);*/
 	_getch();
+}
+
+void restoreColor(HANDLE h)
+{
+	setcolor(h, defaultBg, defaultFg);
 }
 
 int getXPos(bool lower, int towerNo, int towerHeight)
@@ -78,7 +80,7 @@ void printTowerBase(HANDLE h, bool lower = false)
 	cout << setw(2) << "B";
 	cout << setw(2 * halfTowerGap) << "";
 	cout << setw(2) << "C";
-	
+
 }
 
 int diskLength(int disk)
@@ -86,28 +88,98 @@ int diskLength(int disk)
 	return disk * 2 + 3;
 }
 
-void drawTower(HANDLE h)
+void drawTower(HANDLE h, int speed)
 {
 	for (int towerNo = 0; towerNo < 3; towerNo++)
 	{
-		showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset, ' ', COLOR_HYELLOW, COLOR_BLACK, towerDrawLength);
+		showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset, ' ', defaultTw, defaultBg, towerDrawLength);
 		for (int i = 0; i < maxDisk + drawTowerBaseYOffset - 2; i++)
 		{
-			showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset - i - 1, ' ', COLOR_HYELLOW, COLOR_BLACK, 1);
-			pause(5);
+			showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset - i - 1, ' ', defaultTw, defaultBg, 1);
+			pause(speed);
 		}
 	}
 }
-
-void drawTowerAndInitDisk(HANDLE h, int origin, int num)
+void drawDiskAtGivenPlace(HANDLE h, int towerNo, int towerHeight, int num)
 {
-	drawTower(h);
+	showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo - diskLength(num) / 2, maxDisk + drawTowerBaseYOffset - towerHeight - 1, ' ', colorList[num], defaultBg, diskLength(num));
+	return;
+}
+
+void hideDiskAtGivenPlace(HANDLE h, int towerNo, int towerHeight, int num)
+{
+	showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo - diskLength(num) / 2, maxDisk + drawTowerBaseYOffset - towerHeight - 1, ' ', defaultBg, defaultBg, diskLength(num));
+	if (towerHeight < maxDisk + drawTowerBaseYOffset - 2)
+		showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset - towerHeight - 1, ' ', defaultTw, defaultBg, 1);
+}
+
+void drawMoveDiskUpOne(HANDLE h, int origin, int oriPlace)
+{
+	hideDiskAtGivenPlace(h, origin, oriPlace, towers[origin][towerPointer[origin]]);
+	drawDiskAtGivenPlace(h, origin, oriPlace + 1, towers[origin][towerPointer[origin]]);
+	return;
+}
+
+void drawMoveDiskDownOne(HANDLE h, int origin, int oriPlace)
+{
+	hideDiskAtGivenPlace(h, origin, oriPlace, towers[origin][towerPointer[origin]
+		- 1]);
+	drawDiskAtGivenPlace(h, origin, oriPlace - 1, towers[origin][towerPointer[origin] - 1]);
+	return;
+}
+
+void drawMoveDiskRightOne(HANDLE h, int oriX, int len, int right, int color) //如果右移，right置为1，左移置为-1
+{
+	switch (right)
+	{
+		case 1:
+			showch(h, oriX, drawTowerBaseYOffset - 2, ' ', defaultBg, defaultBg, 1);
+			showch(h, oriX + len, drawTowerBaseYOffset - 2, ' ', color, defaultBg, 1);
+			break;
+		case -1:
+			showch(h, oriX + len - 1, drawTowerBaseYOffset - 2, ' ', defaultBg, defaultBg, 1);
+			showch(h, oriX - 1, drawTowerBaseYOffset - 2, ' ', color, defaultBg, 1);
+			break;
+	}
+	return;
+}
+
+void drawInitDisk(HANDLE h, int origin, int num, int speed)
+{
 	for (int i = 0; i < num; i++)
 	{
-		showch(h, towerDrawPreSpace + (towerDrawLength * origin) + towerDrawLength / 2 + towerDrawGap * origin - diskLength(towers[origin][i]) / 2, maxDisk + drawTowerBaseYOffset - i - 1, ' ', colorList[towers[origin][i]], COLOR_BLACK, diskLength(towers[origin][i]));
-		pause(5);
+		drawDiskAtGivenPlace(h, origin, i, towers[origin][i]);
+		pause(speed);
 	}
+	restoreColor(h);
+
 }
+
+void drawMoveDisk(HANDLE h, int origin, int dest, int num, int speed)
+{
+	int oriPlace = towerPointer[origin];
+	for (int i = 0; i < maxDisk - towerPointer[origin] + drawTowerBaseYOffset - 2; i++)
+	{
+		drawMoveDiskUpOne(h, origin, oriPlace++);
+		pause(speed);
+	}
+	int u = (dest - origin > 0) ? 1 : -1;
+	int oriX = towerDrawPreSpace + (towerDrawLength * origin) + towerDrawLength / 2 + towerDrawGap * origin - diskLength(num) / 2;
+	for (int i = 0; i < abs((towerDrawLength + towerDrawGap) * (dest - origin)); i++)
+	{
+		drawMoveDiskRightOne(h, oriX, diskLength(num), u, colorList[num]);
+		oriX += u;
+		pause(speed, true);
+
+	}
+	for (int i = 0; i < maxDisk - towerPointer[dest] + drawTowerBaseYOffset - 1; i++)
+	{
+		drawMoveDiskDownOne(h, dest, oriPlace--);
+		pause(speed);
+	}
+	restoreColor(h);
+}
+
 
 void printTowerGra(HANDLE h, bool clean, bool lower)
 {
@@ -132,13 +204,13 @@ void printTowerMove(HANDLE h, int from, int to, int num, bool lower = false)
 {
 	gotoxy(h, getXPos(lower, from, towerPointer[from]), getYPos(lower, from, towerPointer[from]));
 	cout << "  ";
-	gotoxy(h, getXPos(lower, to, towerPointer[to] -1), getYPos(lower, to, towerPointer[to] -1 ));
+	gotoxy(h, getXPos(lower, to, towerPointer[to] - 1), getYPos(lower, to, towerPointer[to] - 1));
 	cout << setw(2) << num;
 }
 
-void printArray(int num, int from, int to, bool initial, bool outArray, bool outNum,int mode, int speed)
+void printArray(int num, int from, int to, bool initial, bool outArray, bool outNum, int mode, int speed)
 {
-	
+
 	if (!initial) {
 		if (outNum) {
 			cout << "Step" << setw(5) << setfill('0') << totalMove << setfill(' ') << ":";
@@ -161,7 +233,7 @@ void printArray(int num, int from, int to, bool initial, bool outArray, bool out
 			cout << setw(3 * maxDisk - 3 * towerPointer[towerNo]) << "";
 		}
 	}
-	if(mode == 4 || mode == 8)
+	if ((mode == 4 || mode == 8) && (speed / 10))
 		pause(speed);
 }
 
@@ -186,29 +258,52 @@ void Move(HANDLE h, int from, int to, int num, int mode, int speed)
 		case 1:
 			printArray(num, from, to, false, outArray, outNum, mode, speed);
 			break;
+		case 6:
+		case 7:
 		case 8:
-			gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 1);
+			outArray = true;
+			drawMoveDisk(h, from, to, num, speed);
+			if (mode == 7)
+			{
+				break;
+			}
 			printTowerMove(h, from, to, num, true);
+			gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 1);
 			printArray(num, from, to, false, outArray, true, mode, speed);
 			break;
+	}
+	if (speed / 10)
+	{
+		_getch();
 	}
 	cout << endl;
 }
 
-void HanoiStep(HANDLE h, int origin, int dest, int totalNum, int mode, int speed)
+void HanoiStep(HANDLE h, int origin, int dest, int totalNum, int mode, int speed, bool outerCall = true)
 {
 	//定义这样的一组动作为“汉诺步骤”
-	char intermediate;
-
-	if (totalNum == 1)
+	int intermediate;
+	static bool mode7Moved = false;
+	if (outerCall)
+		mode7Moved = false;
+	if (mode == 7 && !mode7Moved || mode != 7) {
+		if (totalNum == 1)
+		{
+			Move(h, origin, dest, 1, mode, speed);
+			mode7Moved = true;
+			return;
+		}
+		intermediate = 0 + 1 + 2 - origin - dest;
+		HanoiStep(h, origin, intermediate, totalNum - 1, mode, speed, false);
+		if (mode == 7 && mode7Moved)
+			return;
+		Move(h, origin, dest, totalNum, mode, speed);
+		HanoiStep(h, intermediate, dest, totalNum - 1, mode, speed, false);
+	}
+	else
 	{
-		Move(h, origin, dest, 1, mode, speed);
 		return;
 	}
-	intermediate = 0 + 1 + 2 - origin - dest;
-	HanoiStep(h, origin, intermediate, totalNum - 1, mode, speed);
-	Move(h, origin, dest, totalNum, mode, speed);
-	HanoiStep(h, intermediate, dest, totalNum - 1, mode, speed);
 }
 
 void OutputInit(HANDLE h, int mode, int speed)
@@ -226,6 +321,8 @@ void OutputInit(HANDLE h, int mode, int speed)
 			printArray(-1, -1, -1, true, true, true, mode, speed);
 			cout << endl;
 			break;
+		case 7:
+		case 9:
 		case 8:
 			printTowerBase(h, true);
 			printTowerGra(h, true, true);
@@ -236,34 +333,52 @@ void OutputInit(HANDLE h, int mode, int speed)
 	}
 }
 
+void HanoiGame(HANDLE h, int origin, int dest, int totalNum, int speed)
+{
+	char str[80] = { '\0' };
+
+	while (true) {
+		gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 3);
+		cout << "输入命令，如AC代表从A到C:";
+		cin >> str;
+		Move(h, str[0] - 'A', str[1] - 'A', towers[str[0] - 'A'][towerPointer[str[0] - 'A'] - 1], 8, speed);
+	}
+	
+}
+
 void Hanoi(HANDLE h, int origin, int dest, int totalNum, int mode, int speed)
 {
 	//给塔栈初始化
+	restoreColor(h);
 	system("cls");
-	for (int i = 0; i < totalNum; i++)
-	{
-		towers[origin][i] = totalNum - i;
+	if (mode != 5) {
+		cout << "从 " << char(origin + 'A') << " 移动到 " << char(dest + 'A') << " ，共 " << totalNum << " 层。" << endl;
+		for (int i = 0; i < totalNum; i++)
+		{
+			towers[origin][i] = totalNum - i;
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			towerPointer[i] = 0;
+		}
+		towerPointer[origin] = totalNum;
 	}
-	for (int i = 0; i < 3; i++)
+	if (mode >= 5)
 	{
-		towerPointer[i] = 0;
+		drawTower(h, speed);
+		if (mode == 5)
+			return;
+		drawInitDisk(h, origin, totalNum, speed);
+		if (mode == 6)
+			return;
 	}
-	if (mode == 5)
-	{
-		drawTower(h);
-		return;
-	}
-	if (mode == 6)
-	{
-		drawTowerAndInitDisk(h, origin, totalNum);
-		return;
-	}
-	towerPointer[origin] = totalNum;
-
-	cout << "从 " << char(origin + 'A') << " 移动到 " << char(dest + 'A') << " ，共 " << totalNum << " 层。" << endl;
-
 	OutputInit(h, mode, speed);
-	HanoiStep(h,origin, dest, totalNum, mode, speed);
+	if(mode != 9)
+		HanoiStep(h, origin, dest, totalNum, mode, speed);
+	else
+	{
+		HanoiGame(h, origin, dest, totalNum, speed);
+	}
 }
 
 char toUpperCase(char a)
@@ -279,6 +394,8 @@ char toUpperCase(char a)
 void inputTower(int mode, int *n, char *towerOrigin, char *towerDest, int *speed)
 {
 	bool valid;
+	int pressCont = 0;
+
 	if (mode >= 1 && mode <= 9 && mode != 5) {
 		do
 		{
@@ -366,14 +483,14 @@ void inputTower(int mode, int *n, char *towerOrigin, char *towerDest, int *speed
 			}
 		} while (!valid);
 	}
-	if (mode == 4 || mode == 8) {
+	if (mode == 4 || mode == 8 || mode == 7 || mode == 9) {
 		do
 		{
 			valid = true;
-			cout << "输入移动速度（0为按任意键手动进行，1-5分别为按810ms-10ms间隔自动进行）：";
+			cout << "输入移动速度（0-9从最慢到最快）：";
 			cin >> *speed;
 
-			if (!cin.good() || *speed > 5 || *speed < 0)
+			if (!cin.good() || *speed > 9 || *speed < 0)
 			{
 				valid = false;
 				cout << "输入不合法，请重新输入。" << endl;
@@ -383,23 +500,48 @@ void inputTower(int mode, int *n, char *towerOrigin, char *towerDest, int *speed
 			}
 		} while (!valid);
 		cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
+		if (mode != 9)
+		{
+			do
+			{
+				valid = true;
+				cout << "是(1)否(0)每一步都按回车键暂停？";
+				cin >> pressCont;
+
+				if (!cin.good() || pressCont > 1 || pressCont < 0)
+				{
+					valid = false;
+					cout << "输入不合法，请重新输入。" << endl;
+					cin.clear();
+					cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
+					continue;
+				}
+			} while (!valid);
+			*speed += pressCont * 10;
+			cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
+		}
+		
 	}
 }
 
 int main()
 {
-
-	system("cls");
-	system("mode con cols=140 lines=25");
-	int mode = 1;
+	int mode;
 	int n;
 	char towerOrigin, towerDest, opt;
 	int speed;
-
-	freopen("in.txt", "r", stdin);
 	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+	setconsoleborder(h, maxDisk * 10 + 18, 40);
+	restoreColor(h);
+	while (true)
+	{
+		mode = 1;
+		speed = 3;
+		system("cls");
 
-	cout << "		---------------------------------\n\
+		//freopen("in.txt", "r", stdin);
+
+		cout << "		---------------------------------\n\
 		1.基本解\n\
 		2.基本解(步数记录)\n\
 		3.内部数组显示(横向)\n\
@@ -413,16 +555,21 @@ int main()
 		----------------------------------\n\
 		[请选择0 - 9]:";
 
-	do {
-		opt = _getch();
-	} while (!(opt >= '0' && opt <= '9'));
-	cout << opt << endl;
+		do {
+			opt = _getch();
+		} while (!(opt >= '0' && opt <= '9'));
+		cout << opt << endl;
 
-	mode = opt - '0';
-	if (mode == 0)
-		return 0;
-	inputTower(mode, &n, &towerOrigin, &towerDest, &speed);
-	totalMove = 0;
-	Hanoi(h, towerOrigin - int('A'), towerDest - int('A'), n, mode, speed);
+		mode = opt - '0';
+		if (mode == 0)
+			return 0;
+		inputTower(mode, &n, &towerOrigin, &towerDest, &speed);
+		totalMove = 0;
+		Hanoi(h, towerOrigin - int('A'), towerDest - int('A'), n, mode, speed);
+		restoreColor(h);
+		gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 3);
+		cout << "按任意键";
+		_getch();
+	}
 	return 0;
 }
