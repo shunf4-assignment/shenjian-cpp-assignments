@@ -21,9 +21,9 @@ const int towerDrawPreSpace = 6;
 const int towerDrawGap = 6;
 const int towerDrawLength = 2 * maxDisk + 5;
 const int colorList[] = { 0, COLOR_RED, COLOR_BLUE, COLOR_CYAN,COLOR_GREEN,COLOR_PINK,COLOR_HRED,COLOR_HBLUE,COLOR_HCYAN,COLOR_HGREEN,COLOR_HPINK,1333,2444,3433 };
-const int defaultBg = COLOR_WHITE;
-const int defaultFg = COLOR_BLACK;
-const int defaultTw = COLOR_HYELLOW;
+const int defaultBg = COLOR_BLACK;
+const int defaultFg = COLOR_WHITE;
+const int defaultTw = COLOR_YELLOW;
 const int speedList[] = { 1500, 800, 300, 100, 60, 20, 8, 2, 1, 0 };
 
 int totalMove = 0;
@@ -257,6 +257,7 @@ void Move(HANDLE h, int from, int to, int num, int mode, int speed)
 			outNum = true;
 		case 1:
 			printArray(num, from, to, false, outArray, outNum, mode, speed);
+			pause(speed);
 			break;
 		case 6:
 		case 7:
@@ -339,11 +340,39 @@ void HanoiGame(HANDLE h, int origin, int dest, int totalNum, int speed)
 
 	while (true) {
 		gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 3);
+		cout << setw(140) << "";
+		gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 4);
+		cout << setw(140) << "";
+		gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 3);
+		if (towerPointer[dest] == totalNum)
+		{
+			cout << "游戏结束，你赢了。";
+			break;
+		}
 		cout << "输入命令，如AC代表从A到C:";
 		cin >> str;
+		if (strlen(str) != 2 || str[0] > 'C' || str[0] < 'A' || str[1] > 'C' || str[1] < 'A' || str[0] == str[1])
+		{
+			cout << "输入错误或超出范围，请重新输入。" << endl;
+			Sleep(1000);
+			continue;
+		}
+		if (towerPointer[(str[0] - 'A')] == 0)
+		{
+			cout << "移出的柱上没有圆盘，请重新输入。" << endl;
+			Sleep(1000);
+			continue;
+		}
+		if (towerPointer[(str[1] - 'A')] != 0 && towers[(str[1] - 'A')][towerPointer[(str[1] - 'A')] - 1] < towers[(str[0] - 'A')][towerPointer[(str[0] - 'A')] - 1])
+		{
+			cout << "将造成大盘压小盘，请重新输入。" << endl;
+			Sleep(1000);
+			continue;
+		}
 		Move(h, str[0] - 'A', str[1] - 'A', towers[str[0] - 'A'][towerPointer[str[0] - 'A'] - 1], 8, speed);
 	}
-	
+
+
 }
 
 void Hanoi(HANDLE h, int origin, int dest, int totalNum, int mode, int speed)
@@ -373,8 +402,12 @@ void Hanoi(HANDLE h, int origin, int dest, int totalNum, int mode, int speed)
 			return;
 	}
 	OutputInit(h, mode, speed);
-	if(mode != 9)
+	if (mode != 9)
+	{
+		if(mode >= 4)
+			pause(2);
 		HanoiStep(h, origin, dest, totalNum, mode, speed);
+	}
 	else
 	{
 		HanoiGame(h, origin, dest, totalNum, speed);
@@ -500,7 +533,7 @@ void inputTower(int mode, int *n, char *towerOrigin, char *towerDest, int *speed
 			}
 		} while (!valid);
 		cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
-		if (mode != 9)
+		if (mode != 9 && mode != 7)
 		{
 			do
 			{
@@ -520,7 +553,7 @@ void inputTower(int mode, int *n, char *towerOrigin, char *towerDest, int *speed
 			*speed += pressCont * 10;
 			cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
 		}
-		
+
 	}
 }
 
@@ -567,7 +600,12 @@ int main()
 		totalMove = 0;
 		Hanoi(h, towerOrigin - int('A'), towerDest - int('A'), n, mode, speed);
 		restoreColor(h);
-		gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 3);
+		if (mode >= 4)
+		{
+			gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 3);
+		}
+		if (mode == 9)
+			cout << endl;
 		cout << "按任意键";
 		_getch();
 	}
