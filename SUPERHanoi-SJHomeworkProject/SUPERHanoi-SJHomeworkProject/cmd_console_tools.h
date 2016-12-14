@@ -26,3 +26,4 @@ void gotoxy(const HANDLE hout, const int X, const int Y);
 void showch(const HANDLE hout, const int X, const int Y, const char ch, const int bg_color = COLOR_BLACK, const int fg_color = COLOR_WHITE, const int n = 1);
 void setconsoleborder(const HANDLE hout, const int cols, const int lines);
 #pragma once
+

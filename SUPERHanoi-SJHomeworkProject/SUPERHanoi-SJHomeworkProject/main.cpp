@@ -1,10 +1,11 @@
 /* 1652270 计算机2班 冯舜 */
+#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include <iostream>
 #include <conio.h>
 #include <cstdio>
 #include <iomanip>
-#include "cmd_console_tools.cpp"
+#include "cmd_console_tools.h"
 
 using namespace std;
 
@@ -15,6 +16,11 @@ const int halfTowerGap = 4;
 const int colorHalfTowerGap = 4;
 const int textTowerBaseYOffset1 = 7;
 const int textTowerBaseYOffset2 = 7;
+const int drawTowerBaseYOffset = 3;
+const int towerDrawPreSpace = 6;
+const int towerDrawGap = 6;
+const int towerDrawLength = 2 * maxDisk + 5;
+const int colorList[] = { 0, COLOR_RED, COLOR_BLUE, COLOR_CYAN,COLOR_GREEN,COLOR_PINK,COLOR_HRED,COLOR_HBLUE,COLOR_HCYAN,COLOR_HGREEN,COLOR_HPINK };
 
 int totalMove = 0;
 int towers[3][maxDisk] = { { 0 },{ 0 },{ 0 } };
@@ -31,6 +37,23 @@ void pause(int speed)
 			Sleep(1010 - speed * 200);
 	}
 }
+void pause_()
+{
+	/*freopen("CON", "r", stdin);
+	system("pause>nul");
+	freopen("in.txt", "r", stdin);*/
+	_getch();
+}
+
+int getXPos(bool lower, int towerNo, int towerHeight)
+{
+	return baseMarginX + halfTowerGap * (2 * towerNo + 1) + 2 * towerNo;
+}
+
+int getYPos(bool lower, int towerNo, int towerHeight)
+{
+	return  ((-2 - towerHeight + maxDisk + textTowerBaseYOffset1) + ((lower) ? (maxDisk + textTowerBaseYOffset2) : 0));
+}
 
 int Push(int towerNum, int diskSize)
 {
@@ -45,7 +68,7 @@ int Pop(int towerNum)
 
 void printTowerBase(HANDLE h, bool lower = false)
 {
-	gotoxy(h, baseMarginX, maxDisk + textTowerBaseYOffset1 + lower ? (maxDisk + textTowerBaseYOffset2) : 0);
+	gotoxy(h, baseMarginX, getYPos(lower, 0, -1));
 	for (int i = 0; i < halfTowerGap * 6 + 6; i++)
 		cout << '=';
 	cout << endl;
@@ -55,15 +78,44 @@ void printTowerBase(HANDLE h, bool lower = false)
 	cout << setw(2) << "B";
 	cout << setw(2 * halfTowerGap) << "";
 	cout << setw(2) << "C";
+	
 }
 
-void printTowerGra(HANDLE h, bool clean, bool lower = false)
-{
+int diskLength(int disk)
+{ //dick的长度
+	return disk * 2 + 3;
+}
 
+void drawTower(HANDLE h)
+{
 	for (int towerNo = 0; towerNo < 3; towerNo++)
 	{
-		int thisY = maxDisk + textTowerBaseYOffset1 + lower ? (maxDisk + textTowerBaseYOffset2) : 0;
-		int thisX = baseMarginX + halfTowerGap * (2 * towerNo - 1) + 2 * towerNo;
+		showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset, ' ', COLOR_HYELLOW, COLOR_BLACK, towerDrawLength);
+		for (int i = 0; i < maxDisk + drawTowerBaseYOffset - 2; i++)
+		{
+			showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset - i - 1, ' ', COLOR_HYELLOW, COLOR_BLACK, 1);
+			pause(5);
+		}
+	}
+}
+
+void drawTowerAndInitDisk(HANDLE h, int origin, int num)
+{
+	drawTower(h);
+	for (int i = 0; i < num; i++)
+	{
+		showch(h, towerDrawPreSpace + (towerDrawLength * origin) + towerDrawLength / 2 + towerDrawGap * origin - diskLength(towers[origin][i]) / 2, maxDisk + drawTowerBaseYOffset - i - 1, ' ', colorList[towers[origin][i]], COLOR_BLACK, diskLength(towers[origin][i]));
+		pause(5);
+	}
+}
+
+void printTowerGra(HANDLE h, bool clean, bool lower)
+{
+	int thisX, thisY;
+	for (int towerNo = 0; towerNo < 3; towerNo++)
+	{
+		thisY = getYPos(lower, towerNo, 0);
+		thisX = getXPos(lower, towerNo, 0);
 		for (int towerDisk = 0; towerDisk < (clean ? maxDisk : towerPointer[towerNo]); towerDisk++)
 		{
 			gotoxy(h, thisX, thisY);
@@ -78,18 +130,26 @@ void printTowerGra(HANDLE h, bool clean, bool lower = false)
 
 void printTowerMove(HANDLE h, int from, int to, int num, bool lower = false)
 {
-	gotoxy(h, baseMarginX + halfTowerGap * (2 * from - 1) + 2 * from, (maxDisk + textTowerBaseYOffset1 + lower ? (maxDisk + textTowerBaseYOffset2) : 0) - 1 - towerPointer[from]);
+	gotoxy(h, getXPos(lower, from, towerPointer[from]), getYPos(lower, from, towerPointer[from]));
 	cout << "  ";
-	gotoxy(h, baseMarginX + halfTowerGap * (2 * to - 1) + 2 * to, (maxDisk + textTowerBaseYOffset1 + lower ? (maxDisk + textTowerBaseYOffset2) : 0) - 1 - towerPointer[to]);
+	gotoxy(h, getXPos(lower, to, towerPointer[to] -1), getYPos(lower, to, towerPointer[to] -1 ));
 	cout << setw(2) << num;
 }
 
-void printArray(int num, int from, int to, bool initial = false, bool outArray = false)
+void printArray(int num, int from, int to, bool initial, bool outArray, bool outNum,int mode, int speed)
 {
-	if (!initial)
-		cout << "Step" << setw(5) << setfill('0') << totalMove << setfill(' ') << ":(" << num << ")@" << towerName[from] << "-->" << towerName[to] << ". ";
+	
+	if (!initial) {
+		if (outNum) {
+			cout << "Step" << setw(5) << setfill('0') << totalMove << setfill(' ') << ":";
+		}
+		cout << "(" << num << ")@" << towerName[from] << "-->" << towerName[to] << ". ";
+	}
 	else
-		cout << "初始：               ";
+	{
+		if (outNum)
+			cout << "初始：               ";
+	}
 	if (outArray) {
 		for (int towerNo = 0; towerNo < 3; towerNo++)
 		{
@@ -101,52 +161,57 @@ void printArray(int num, int from, int to, bool initial = false, bool outArray =
 			cout << setw(3 * maxDisk - 3 * towerPointer[towerNo]) << "";
 		}
 	}
-	pause();
+	if(mode == 4 || mode == 8)
+		pause(speed);
 }
 
 //A:0,B:1,C:2
-void Move(HANDLE h, int from, int to, int num, int mode)
+void Move(HANDLE h, int from, int to, int num, int mode, int speed)
 {
 	totalMove += 1;
 	Pop(from);
 	Push(to, num);
 	//开始输出
 	bool outArray = false;
+	bool outNum = false;
 	switch (mode)
 	{
 		case 4:
+			printTowerMove(h, from, to, num, false);
 			gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + 2);
 		case 3:
 			outArray = true;
 		case 2:
+			outNum = true;
 		case 1:
-			printArray(num, from, to, false, outArray);
+			printArray(num, from, to, false, outArray, outNum, mode, speed);
 			break;
 		case 8:
 			gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 1);
-			printArray(num, from, to, false, outArray);
+			printTowerMove(h, from, to, num, true);
+			printArray(num, from, to, false, outArray, true, mode, speed);
 			break;
 	}
 	cout << endl;
 }
 
-void HanoiStep(HANDLE h, int origin, int dest, int totalNum, int mode)
+void HanoiStep(HANDLE h, int origin, int dest, int totalNum, int mode, int speed)
 {
 	//定义这样的一组动作为“汉诺步骤”
 	char intermediate;
 
 	if (totalNum == 1)
 	{
-		Move(h, origin, dest, 1, mode);
+		Move(h, origin, dest, 1, mode, speed);
 		return;
 	}
 	intermediate = 0 + 1 + 2 - origin - dest;
-	HanoiStep(h, origin, intermediate, totalNum - 1, mode);
-	Move(h, origin, dest, totalNum, mode);
-	HanoiStep(h, intermediate, dest, totalNum - 1, mode);
+	HanoiStep(h, origin, intermediate, totalNum - 1, mode, speed);
+	Move(h, origin, dest, totalNum, mode, speed);
+	HanoiStep(h, intermediate, dest, totalNum - 1, mode, speed);
 }
 
-void OutputInit(HANDLE h, int mode)
+void OutputInit(HANDLE h, int mode, int speed)
 {
 	switch (mode)
 	{
@@ -158,34 +223,47 @@ void OutputInit(HANDLE h, int mode)
 			printTowerGra(h, true, false);
 			gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + 2);
 		case 3:
-			printArray(-1, -1, -1, true);
+			printArray(-1, -1, -1, true, true, true, mode, speed);
 			cout << endl;
 			break;
 		case 8:
 			printTowerBase(h, true);
 			printTowerGra(h, true, true);
 			gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 1);
-			printArray(-1, -1, -1, true);
+			printArray(-1, -1, -1, true, true, true, mode, speed);
 			cout << endl;
 			break;
 	}
 }
 
-void Hanoi(HANDLE h, int origin, int dest, int totalNum, int mode)
+void Hanoi(HANDLE h, int origin, int dest, int totalNum, int mode, int speed)
 {
 	//给塔栈初始化
+	system("cls");
 	for (int i = 0; i < totalNum; i++)
 	{
 		towers[origin][i] = totalNum - i;
+	}
+	for (int i = 0; i < 3; i++)
+	{
 		towerPointer[i] = 0;
 	}
+	if (mode == 5)
+	{
+		drawTower(h);
+		return;
+	}
+	if (mode == 6)
+	{
+		drawTowerAndInitDisk(h, origin, totalNum);
+		return;
+	}
 	towerPointer[origin] = totalNum;
-	system("cls");
 
-	cout << "从 " << char(origin + 'A') << " 移动到 " << char(dest + 'A') << " ，共 " << totalNum << " 层。";
+	cout << "从 " << char(origin + 'A') << " 移动到 " << char(dest + 'A') << " ，共 " << totalNum << " 层。" << endl;
 
-	OutputInit(h, mode);
-	HanoiStep(h,origin, dest, totalNum);
+	OutputInit(h, mode, speed);
+	HanoiStep(h,origin, dest, totalNum, mode, speed);
 }
 
 char toUpperCase(char a)
@@ -198,10 +276,10 @@ char toUpperCase(char a)
 	return a;
 }
 
-int inputTower(int mode, int *n, char *towerOrigin, char *towerDest, int *speed)
+void inputTower(int mode, int *n, char *towerOrigin, char *towerDest, int *speed)
 {
 	bool valid;
-	if (mode >= 1 && mode <= 8 && mode != 5) {
+	if (mode >= 1 && mode <= 9 && mode != 5) {
 		do
 		{
 			valid = true;
@@ -317,9 +395,11 @@ int main()
 	int n;
 	char towerOrigin, towerDest, opt;
 	int speed;
+
+	freopen("in.txt", "r", stdin);
 	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	cout << "---------------------------------\n\
+	cout << "		---------------------------------\n\
 		1.基本解\n\
 		2.基本解(步数记录)\n\
 		3.内部数组显示(横向)\n\
@@ -332,14 +412,17 @@ int main()
 		0.退出\n\
 		----------------------------------\n\
 		[请选择0 - 9]:";
-	while (!(opt >= '0' && opt <= '9')) {
+
+	do {
 		opt = _getch();
-	}
+	} while (!(opt >= '0' && opt <= '9'));
+	cout << opt << endl;
+
 	mode = opt - '0';
 	if (mode == 0)
 		return 0;
 	inputTower(mode, &n, &towerOrigin, &towerDest, &speed);
 	totalMove = 0;
-	Hanoi(h, towerOrigin - int('A'), towerDest - int('A'), n, mode);
+	Hanoi(h, towerOrigin - int('A'), towerDest - int('A'), n, mode, speed);
 	return 0;
 }
