@@ -9,65 +9,75 @@
 
 using namespace std;
 
+
+//¶¨ÒåÒ»Ğ©³£±äÁ¿£¬°üÀ¨×î´óµÄÔ²ÅÌÊıÁ¿¡¢Öù×ÓÖ®¼äµÄ¼ä¸ô¡¢ÑÕÉ«µÈµÈ
 const int maxDisk = 10;
-const int baseMarginX = 6;
+const int baseMarginX = 4;
 const char towerName[] = { 'A', 'B', 'C' };
 const int halfTowerGap = 4;
 const int colorHalfTowerGap = 4;
-const int textTowerBaseYOffset1 = 3;
-const int textTowerBaseYOffset2 = 3;
-const int drawTowerBaseYOffset = 3;
-const int towerDrawPreSpace = 6;
-const int towerDrawGap = 6;
+const int textTowerBaseYOffset1 = 5;
+const int textTowerBaseYOffset2 = 5;
+const int drawTowerBaseYOffset = 6;
+const int towerDrawPreSpace = 8;
+const int towerDrawGap = 8;
 const int towerDrawLength = 2 * maxDisk + 5;
 const int colorList[] = { 0, COLOR_RED, COLOR_BLUE, COLOR_CYAN,COLOR_GREEN,COLOR_PINK,COLOR_HRED,COLOR_HBLUE,COLOR_HCYAN,COLOR_HGREEN,COLOR_HPINK,1333,2444,3433 };
 const int defaultBg = COLOR_BLACK;
 const int defaultFg = COLOR_WHITE;
 const int defaultTw = COLOR_YELLOW;
 const int speedList[] = { 1500, 800, 300, 100, 60, 20, 8, 2, 1, 0 };
+const int promptSleep = 1500;
+const int consoleHeight = 40;
 
+//È«¾Ö±äÁ¿£¬·Ö±ğÊÇÒÆ¶¯²½Êı¡¢Öù×ÓÉÏµÄÔ²ÅÌÕ»Êı¾İºÍÖ¸Õë
 int totalMove = 0;
 int towers[3][maxDisk] = { { 0 },{ 0 },{ 0 } };
 int towerPointer[] = { 0,0,0 };  //Ö¸µÄÊÇ²ãÊı+1£¬Ò²¾ÍÊÇPushÏÂÒ»¸öÔ²ÅÌÓ¦¸ÃÔÚµÄÎ»ÖÃ
 
+//Ã¿´Î¸üĞÂÍ¼ĞÎ²Ù×÷ºóµÄÑÓ³Ù
 void pause(int speed, bool faster = false)
 {
 	Sleep(faster ? (speedList[speed % 10] / 4) : speedList[speed % 10]);
 }
-void pause_()
-{
-	/*freopen("CON", "r", stdin);
-	system("pause>nul");
-	freopen("in.txt", "r", stdin);*/
-	_getch();
-}
 
+//»Ö¸´Ä¬ÈÏµÄÑÕÉ«£¬ÓÃÓÚÎÄ±¾Êä³ö
 void restoreColor(HANDLE h)
 {
 	setcolor(h, defaultBg, defaultFg);
 }
 
+//¸ù¾İÖù×ÓµÄ±àºÅºÍÔ²ÅÌËùÔÚÎ»ÖÃ£¬¼ÆËãÊµ¼ÊÆÁÄ»ÉÏ¸ÃÔ²ÅÌ¶ÔÓ¦µÄXÖµ£¨ÎÄ×ÖÊúÊ½£©
 int getXPos(bool lower, int towerNo, int towerHeight)
 {
 	return baseMarginX + halfTowerGap * (2 * towerNo + 1) + 2 * towerNo;
 }
 
+//¸ù¾İÖù×ÓµÄ±àºÅºÍÔ²ÅÌËùÔÚÎ»ÖÃ£¬¼ÆËãÊµ¼ÊÆÁÄ»ÉÏ¸ÃÔ²ÅÌ¶ÔÓ¦µÄYÖµ£¨ÎÄ×ÖÊúÊ½£©
 int getYPos(bool lower, int towerNo, int towerHeight)
 {
 	return  ((-2 - towerHeight + maxDisk + textTowerBaseYOffset1) + ((lower) ? (maxDisk + textTowerBaseYOffset2) : 0));
 }
 
+//¸ù¾İÅÌ×Ó±àºÅ£¬¼ÆËãÊä³öµÄ¿í¶È
+int diskLength(int disk)
+{
+	return disk * 2 + 3;
+}
+
+//½«ÅÌÍÆÈëÖùÕ»ÖĞ
 int Push(int towerNum, int diskSize)
 {
 	towers[towerNum][towerPointer[towerNum]++] = diskSize;
 	return diskSize;
 }
-
+//½«Õ»ÖĞ×îÉÏÃæµÄÅÌµ¯³ö
 int Pop(int towerNum)
 {
 	return towers[towerNum][--towerPointer[towerNum]];
 }
 
+//´òÓ¡ÎÄ×Ö°æËşµÄËş»ù
 void printTowerBase(HANDLE h, bool lower = false)
 {
 	gotoxy(h, baseMarginX, getYPos(lower, 0, -1));
@@ -83,43 +93,41 @@ void printTowerBase(HANDLE h, bool lower = false)
 
 }
 
-int diskLength(int disk)
-{ //dickµÄ³¤¶È
-	return disk * 2 + 3;
-}
-
+//»­³öÖù×Ó£¬Ë³ĞòÊÇ´Ó×óµ½ÓÒ£¬ÔÚÆäÖĞ´ÓÏÂµ½ÉÏ
 void drawTower(HANDLE h, int speed)
 {
 	for (int towerNo = 0; towerNo < 3; towerNo++)
 	{
 		showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset, ' ', defaultTw, defaultBg, towerDrawLength);
-		for (int i = 0; i < maxDisk + drawTowerBaseYOffset - 2; i++)
+		for (int i = 0; i < maxDisk + 1; i++)
 		{
 			showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset - i - 1, ' ', defaultTw, defaultBg, 1);
 			pause(speed);
 		}
 	}
 }
+
+//×ÖÃæÒâÒå
 void drawDiskAtGivenPlace(HANDLE h, int towerNo, int towerHeight, int num)
 {
 	showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo - diskLength(num) / 2, maxDisk + drawTowerBaseYOffset - towerHeight - 1, ' ', colorList[num], defaultBg, diskLength(num));
 	return;
 }
-
+//×ÖÃæÒâÒå
 void hideDiskAtGivenPlace(HANDLE h, int towerNo, int towerHeight, int num)
 {
 	showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo - diskLength(num) / 2, maxDisk + drawTowerBaseYOffset - towerHeight - 1, ' ', defaultBg, defaultBg, diskLength(num));
-	if (towerHeight < maxDisk + drawTowerBaseYOffset - 2)
+	if (towerHeight < maxDisk + 1)
 		showch(h, towerDrawPreSpace + (towerDrawLength * towerNo) + towerDrawLength / 2 + towerDrawGap * towerNo, maxDisk + drawTowerBaseYOffset - towerHeight - 1, ' ', defaultTw, defaultBg, 1);
 }
-
+//×ÖÃæÒâÒå
 void drawMoveDiskUpOne(HANDLE h, int origin, int oriPlace)
 {
 	hideDiskAtGivenPlace(h, origin, oriPlace, towers[origin][towerPointer[origin]]);
 	drawDiskAtGivenPlace(h, origin, oriPlace + 1, towers[origin][towerPointer[origin]]);
 	return;
 }
-
+//×ÖÃæÒâÒå
 void drawMoveDiskDownOne(HANDLE h, int origin, int oriPlace)
 {
 	hideDiskAtGivenPlace(h, origin, oriPlace, towers[origin][towerPointer[origin]
@@ -127,7 +135,8 @@ void drawMoveDiskDownOne(HANDLE h, int origin, int oriPlace)
 	drawDiskAtGivenPlace(h, origin, oriPlace - 1, towers[origin][towerPointer[origin] - 1]);
 	return;
 }
-
+//×ÖÃæÒâÒå
+//Ò²¿ÉÒÔ×óÒÆ£¬rightÖÃÎª-1¼´¿É
 void drawMoveDiskRightOne(HANDLE h, int oriX, int len, int right, int color) //Èç¹ûÓÒÒÆ£¬rightÖÃÎª1£¬×óÒÆÖÃÎª-1
 {
 	switch (right)
@@ -144,6 +153,7 @@ void drawMoveDiskRightOne(HANDLE h, int oriX, int len, int right, int color) //È
 	return;
 }
 
+//³õÊ¼»¯µÄÊ±ºò°ÑÆğÊ¼ÖùÉÏµÄÔ²ÅÌ»­ÉÏÈ¥
 void drawInitDisk(HANDLE h, int origin, int num, int speed)
 {
 	for (int i = 0; i < num; i++)
@@ -152,17 +162,19 @@ void drawInitDisk(HANDLE h, int origin, int num, int speed)
 		pause(speed);
 	}
 	restoreColor(h);
-
 }
 
+//»­³öÔ²ÅÌ´ÓÄ³Öùµ½Ä³ÖùµÄÔË¶¯¹ı³Ì
 void drawMoveDisk(HANDLE h, int origin, int dest, int num, int speed)
 {
 	int oriPlace = towerPointer[origin];
-	for (int i = 0; i < maxDisk - towerPointer[origin] + drawTowerBaseYOffset - 2; i++)
+	//ÉÏÒÆ
+	for (int i = 0; i < maxDisk - towerPointer[origin] + 1 ; i++)
 	{
 		drawMoveDiskUpOne(h, origin, oriPlace++);
 		pause(speed);
 	}
+	//Æ½ÒÆ
 	int u = (dest - origin > 0) ? 1 : -1;
 	int oriX = towerDrawPreSpace + (towerDrawLength * origin) + towerDrawLength / 2 + towerDrawGap * origin - diskLength(num) / 2;
 	for (int i = 0; i < abs((towerDrawLength + towerDrawGap) * (dest - origin)); i++)
@@ -172,7 +184,8 @@ void drawMoveDisk(HANDLE h, int origin, int dest, int num, int speed)
 		pause(speed, true);
 
 	}
-	for (int i = 0; i < maxDisk - towerPointer[dest] + drawTowerBaseYOffset - 1; i++)
+	//ÏÂÒÆ
+	for (int i = 0; i < maxDisk - towerPointer[dest] + 2; i++)
 	{
 		drawMoveDiskDownOne(h, dest, oriPlace--);
 		pause(speed);
@@ -180,7 +193,7 @@ void drawMoveDisk(HANDLE h, int origin, int dest, int num, int speed)
 	restoreColor(h);
 }
 
-
+//´òÓ¡ÎÄ×Ö°æµÄÖù×ÓÉÏµÄÔ²ÅÌ£¬´ÓÏÂÍùÉÏ
 void printTowerGra(HANDLE h, bool clean, bool lower)
 {
 	int thisX, thisY;
@@ -200,6 +213,7 @@ void printTowerGra(HANDLE h, bool clean, bool lower)
 	}
 }
 
+//´òÓ¡ÎÄ×Ö°æÖùÅÌµÄÒÆ¶¯£¨ÏÈÏûÈ¥Ô­Î»ÖÃ£¬ÔÙ³öÏÖĞÂÎ»ÖÃ£©
 void printTowerMove(HANDLE h, int from, int to, int num, bool lower = false)
 {
 	gotoxy(h, getXPos(lower, from, towerPointer[from]), getYPos(lower, from, towerPointer[from]));
@@ -208,9 +222,9 @@ void printTowerMove(HANDLE h, int from, int to, int num, bool lower = false)
 	cout << setw(2) << num;
 }
 
+//´òÓ¡ÒÆ¶¯²½Êı¡¢ÒÆ¶¯²Ù×÷ºÍÒÆ¶¯ºóµÄÊı×é
 void printArray(int num, int from, int to, bool initial, bool outArray, bool outNum, int mode, int speed)
 {
-
 	if (!initial) {
 		if (outNum) {
 			cout << "Step" << setw(5) << setfill('0') << totalMove << setfill(' ') << ":";
@@ -238,41 +252,58 @@ void printArray(int num, int from, int to, bool initial, bool outArray, bool out
 }
 
 //A:0,B:1,C:2
+//²Ù×İ´ÓÄ³Î»ÖÃµ½Ä³Î»ÖÃÒÆ¶¯Ô²ÅÌµÄËùÓĞ¹ı³Ì£¬°üÀ¨Õ»²Ù×÷¡¢Í¼ĞÎÊä³ö
+//×¢Òâ£¬ËùÓĞµÄÍ¼ĞÎÊä³ö¶¼ÔÚÕ»²Ù×÷Ö®ºó£¬ËùÒÔ×¢Òâ´ËÊ±¶ÔÊı×éµÄ¶ÁÈ¡
 void Move(HANDLE h, int from, int to, int num, int mode, int speed)
 {
+	if (mode == 7 && totalMove != 0)
+		return;
 	totalMove += 1;
 	Pop(from);
 	Push(to, num);
 	//¿ªÊ¼Êä³ö
+	static bool onceAll = false;
 	bool outArray = false;
 	bool outNum = false;
+	char inputCh;
+
+	if (totalMove == 1)
+		onceAll = false;
+
 	switch (mode)
 	{
 		case 4:
 			printTowerMove(h, from, to, num, false);
 			gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + 2);
+			pause(speed);
 		case 3:
 			outArray = true;
 		case 2:
 			outNum = true;
 		case 1:
 			printArray(num, from, to, false, outArray, outNum, mode, speed);
-			pause(speed);
 			break;
 		case 6:
 		case 7:
 		case 8:
 			outArray = true;
 			drawMoveDisk(h, from, to, num, speed);
-			if (mode == 7)
-			{
-				break;
-			}
 			printTowerMove(h, from, to, num, true);
 			gotoxy(h, 0, maxDisk + textTowerBaseYOffset1 + maxDisk + textTowerBaseYOffset2 + 1);
 			printArray(num, from, to, false, outArray, true, mode, speed);
 			break;
 	}
+	if (mode <= 3 && totalMove % (consoleHeight - 3) == 0 && !onceAll)
+	{
+		cout << endl << "°´¿Õ¸ñ¼ü¼ÌĞø£¬°´»Ø³µ¼üÏÔÊ¾ÓàÏÂÈ«²¿ - ";
+		do
+		{
+			inputCh = _getch();
+		} while (inputCh != ' ' && inputCh != '\r');
+		if (inputCh == '\r')
+			onceAll = true;
+	}
+	//speed µÄÊ®Î»Èç¹ûÊÇ1£¬±íÃ÷Ñ¡ÏîÖĞÑ¡ÁË»Ø³µÔİÍ£
 	if (speed / 10)
 	{
 		_getch();
@@ -280,33 +311,25 @@ void Move(HANDLE h, int from, int to, int num, int mode, int speed)
 	cout << endl;
 }
 
-void HanoiStep(HANDLE h, int origin, int dest, int totalNum, int mode, int speed, bool outerCall = true)
+//¶¨ÒåÕâÑùµÄÒ»×é¶¯×÷Îª¡°ººÅµ²½Öè¡±£¬ÕâÊÇÒ»¸öµİ¹éº¯Êı
+void HanoiStep(HANDLE h, int origin, int dest, int totalNum, int mode, int speed)
 {
-	//¶¨ÒåÕâÑùµÄÒ»×é¶¯×÷Îª¡°ººÅµ²½Öè¡±
 	int intermediate;
-	static bool mode7Moved = false;
-	if (outerCall)
-		mode7Moved = false;
-	if (mode == 7 && !mode7Moved || mode != 7) {
-		if (totalNum == 1)
-		{
-			Move(h, origin, dest, 1, mode, speed);
-			mode7Moved = true;
-			return;
-		}
-		intermediate = 0 + 1 + 2 - origin - dest;
-		HanoiStep(h, origin, intermediate, totalNum - 1, mode, speed, false);
-		if (mode == 7 && mode7Moved)
-			return;
-		Move(h, origin, dest, totalNum, mode, speed);
-		HanoiStep(h, intermediate, dest, totalNum - 1, mode, speed, false);
-	}
-	else
+	if (mode == 7 && totalMove != 0)
+		return;
+	if (totalNum == 1)
 	{
+		Move(h, origin, dest, 1, mode, speed);
 		return;
 	}
+	intermediate = 0 + 1 + 2 - origin - dest;
+	HanoiStep(h, origin, intermediate, totalNum - 1, mode, speed);
+	Move(h, origin, dest, totalNum, mode, speed);
+	HanoiStep(h, intermediate, dest, totalNum - 1, mode, speed);
+
 }
 
+//³õÊ¼»¯ËùÓĞÊä³öÄÚÈİ
 void OutputInit(HANDLE h, int mode, int speed)
 {
 	switch (mode)
@@ -334,6 +357,7 @@ void OutputInit(HANDLE h, int mode, int speed)
 	}
 }
 
+//ÓÎÏ·Ä£Ê½
 void HanoiGame(HANDLE h, int origin, int dest, int totalNum, int speed)
 {
 	char str[80] = { '\0' };
@@ -354,25 +378,26 @@ void HanoiGame(HANDLE h, int origin, int dest, int totalNum, int speed)
 		if (strlen(str) != 2 || str[0] > 'C' || str[0] < 'A' || str[1] > 'C' || str[1] < 'A' || str[0] == str[1])
 		{
 			cout << "ÊäÈë´íÎó»ò³¬³ö·¶Î§£¬ÇëÖØĞÂÊäÈë¡£" << endl;
-			Sleep(1000);
+			Sleep(promptSleep);
+			cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
 			continue;
 		}
 		if (towerPointer[(str[0] - 'A')] == 0)
 		{
 			cout << "ÒÆ³öµÄÖùÉÏÃ»ÓĞÔ²ÅÌ£¬ÇëÖØĞÂÊäÈë¡£" << endl;
-			Sleep(1000);
+			Sleep(promptSleep);
+			cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
 			continue;
 		}
 		if (towerPointer[(str[1] - 'A')] != 0 && towers[(str[1] - 'A')][towerPointer[(str[1] - 'A')] - 1] < towers[(str[0] - 'A')][towerPointer[(str[0] - 'A')] - 1])
 		{
 			cout << "½«Ôì³É´óÅÌÑ¹Ğ¡ÅÌ£¬ÇëÖØĞÂÊäÈë¡£" << endl;
-			Sleep(1000);
+			Sleep(promptSleep);
+			cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
 			continue;
 		}
 		Move(h, str[0] - 'A', str[1] - 'A', towers[str[0] - 'A'][towerPointer[str[0] - 'A'] - 1], 8, speed);
 	}
-
-
 }
 
 void Hanoi(HANDLE h, int origin, int dest, int totalNum, int mode, int speed)
@@ -564,7 +589,7 @@ int main()
 	char towerOrigin, towerDest, opt;
 	int speed;
 	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-	setconsoleborder(h, maxDisk * 10 + 18, 40);
+	setconsoleborder(h, maxDisk * 10 + 18, consoleHeight);
 	restoreColor(h);
 	while (true)
 	{
@@ -596,9 +621,12 @@ int main()
 		mode = opt - '0';
 		if (mode == 0)
 			return 0;
+
 		inputTower(mode, &n, &towerOrigin, &towerDest, &speed);
+
 		totalMove = 0;
 		Hanoi(h, towerOrigin - int('A'), towerDest - int('A'), n, mode, speed);
+
 		restoreColor(h);
 		if (mode >= 4)
 		{
@@ -608,6 +636,7 @@ int main()
 			cout << endl;
 		cout << "°´ÈÎÒâ¼ü";
 		_getch();
+
 	}
 	return 0;
 }
