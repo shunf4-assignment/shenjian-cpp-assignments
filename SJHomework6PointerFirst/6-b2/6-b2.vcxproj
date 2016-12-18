@@ -19,18 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cmd_console_tools.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="in.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="cmd_console_tools.h" />
+    <ClCompile Include="6-b2.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{c9dbca40-da6b-4857-8d84-f66b0b18231c}</ProjectGuid>
-    <RootNamespace>SUPERHanoi_SJHomeworkProject</RootNamespace>
+    <ProjectGuid>{e259d766-40be-43bb-8bc7-086284f767d6}</ProjectGuid>
+    <RootNamespace>_6_b2</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

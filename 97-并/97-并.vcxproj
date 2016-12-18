@@ -19,18 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cmd_console_tools.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\97-b1梅.cpp" />
+    <ClCompile Include="..\SUPERHanoi-SJHomeworkProject\SUPERHanoi-SJHomeworkProject\cmd_console_tools.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="in.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="cmd_console_tools.h" />
+    <ClInclude Include="..\SUPERHanoi-SJHomeworkProject\SUPERHanoi-SJHomeworkProject\cmd_console_tools.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{c9dbca40-da6b-4857-8d84-f66b0b18231c}</ProjectGuid>
-    <RootNamespace>SUPERHanoi_SJHomeworkProject</RootNamespace>
+    <ProjectGuid>{0caf3c29-a561-4b45-aed7-130bcb31dbfa}</ProjectGuid>
+    <RootNamespace>_97_并</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -78,7 +75,13 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>D:\Source\Repos\SJHomework\SUPERHanoi-SJHomeworkProject\SUPERHanoi-SJHomeworkProject\Debug;$(IncludePath)</IncludePath>
+    <SourcePath>D:\Source\Repos\SJHomework\SUPERHanoi-SJHomeworkProject\SUPERHanoi-SJHomeworkProject\;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>D:\Source\Repos\SJHomework\SUPERHanoi-SJHomeworkProject\SUPERHanoi-SJHomeworkProject;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
