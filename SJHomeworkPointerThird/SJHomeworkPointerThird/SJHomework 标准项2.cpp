@@ -63,22 +63,11 @@ void standardInput(T *p, int pLen, const char * varName, T2 lowerLimit = 0, T2 u
 		standardInput(*p2, sizeof(*p) / sizeof(**p), varName, lowerLimit, upperLimit, clearBuffer, false);
 }
 
-void displayArr(int * p, int n = 1, bool bracket = false)
+void displayArr(int * p, int n, bool bracket)
 {
 	cout << "{";
 	int *pCopy = p;
 	for (; pCopy < p + n;pCopy++)
-	{
-		cout << " " << *(pCopy) << ((pCopy < p + n - 1) ? "," : "");
-	}
-	cout << " }";
-}
-
-void displayArr(char * p, int n = 1, bool bracket = false)
-{
-	cout << "{";
-	char *pCopy = p;
-	for (; pCopy < p + n; pCopy++)
 	{
 		cout << " " << *(pCopy) << ((pCopy < p + n - 1) ? "," : "");
 	}
@@ -106,7 +95,12 @@ void displayArr(T * p, int n = 1, bool bracket = false)
 
 int main()
 {
-	char s[10] = "china";
-	char * p = s;
+	//REINPUT:
+	freopen("Text.txt", "r", stdin);
+	int a[3][10];
+	standardInput(&a, 1, "a", 0, 10, false, false);
+	displayArr(&a);
+	cout << endl;
+	//goto REINPUT;
 	return 0;
 }

@@ -2,6 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <stdio.h>
+#include <conio.h>
 using namespace std;
 #define FS_MAX_LENGTH (numeric_limits<std::streamsize>::max())
 
@@ -63,22 +64,11 @@ void standardInput(T *p, int pLen, const char * varName, T2 lowerLimit = 0, T2 u
 		standardInput(*p2, sizeof(*p) / sizeof(**p), varName, lowerLimit, upperLimit, clearBuffer, false);
 }
 
-void displayArr(int * p, int n = 1, bool bracket = false)
+void displayArr(int * p, int n, bool bracket)
 {
 	cout << "{";
 	int *pCopy = p;
 	for (; pCopy < p + n;pCopy++)
-	{
-		cout << " " << *(pCopy) << ((pCopy < p + n - 1) ? "," : "");
-	}
-	cout << " }";
-}
-
-void displayArr(char * p, int n = 1, bool bracket = false)
-{
-	cout << "{";
-	char *pCopy = p;
-	for (; pCopy < p + n; pCopy++)
 	{
 		cout << " " << *(pCopy) << ((pCopy < p + n - 1) ? "," : "");
 	}
@@ -106,7 +96,13 @@ void displayArr(T * p, int n = 1, bool bracket = false)
 
 int main()
 {
-	char s[10] = "china";
-	char * p = s;
+	//REINPUT:
+	char c;
+	while (true)
+	{
+		c = _getch();
+		cout << (int)c << endl;
+	}
+	//goto REINPUT;
 	return 0;
 }
