@@ -29,9 +29,6 @@
     <ClCompile Include="cmd_console_test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="90-b2-main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="90-b2-base.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -41,6 +38,9 @@
     <ClCompile Include="90-b2-tools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="90-b2-main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="test.exe">
@@ -48,6 +48,9 @@
     </None>
     <None Include="SJHomework 标准项2.cpp">
       <Filter>资源文件</Filter>
+    </None>
+    <None Include="源.cpp">
+      <Filter>源文件</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

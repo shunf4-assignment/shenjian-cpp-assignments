@@ -25,6 +25,7 @@
   <ItemGroup>
     <ClCompile Include="90-b2-base.cpp" />
     <ClCompile Include="90-b2-console.cpp" />
+    <None Include="源.cpp" />
     <ClCompile Include="90-b2-main.cpp" />
     <ClCompile Include="90-b2-tools.cpp" />
     <ClCompile Include="cmd_console_test.cpp" />

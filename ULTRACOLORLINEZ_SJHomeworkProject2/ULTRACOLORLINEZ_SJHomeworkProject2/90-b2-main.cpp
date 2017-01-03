@@ -194,7 +194,7 @@ void part6OnceMove()
 
 	graphicTable(gameMap, tableStartX, tableStartY);
 	getxy(hout, x, y);
-	if (inputMoveByMouse(gameMap, source, dest, tableStartX, tableStartY, x, y, x, y + 1, -1, -1, -1, -1) != -1)
+	if (inputMoveByMouse(gameMap, source, dest, tableStartX, tableStartY, x, y, x, y + 1, -1, -1, -1, -1, false) != -1)
 	{
 		path = staticPath(gameMap, source, dest);
 
@@ -219,112 +219,229 @@ void part6OnceMove()
 	pressEnterToContinue();
 }
 
-void part7GraphicFull()
+void part7GraphicFull(bool keyBoard)
 {
-	const int nextBallNum = 3;
-	int gameMap[CL_MAXGRID + 2][CL_MAXGRID + 2];
-	int pathMap[CL_MAXGRID + 2][CL_MAXGRID + 2] = { 0 };
 	int w = 9, h = 9;
 	int windowWidth, windowHeight, tableWidth, tableHeight, tableStartX, tableStartY;
-	int menuX, menuY, KingX = 0, KingY = 0, PretenderX = 0, PretenderY = 0, scoreKX, scoreKY, nextBallsX, nextBallsY, scorePX, scorePY, promptX, promptY, statX, statY;
-	int *path;
-	int nextBalls[nextBallNum + 1] = { 0,0,0 };
-	int source, dest;
-	int score = 0, thisScore = 0, kingScore = 100, thisBallCount = 0;
-	bool exitFlag = false;
-	int gameStats[] = { 0,0,0,0,0,0,0,0,0 };
-	int gameStatsBallDel[] = { 0,0,0,0,0,0,0,0,0 };
-
 	inputWidthHeight(w, h);
-
-	initializeMap(gameMap, w, h);
-	randomEmerge(gameMap, 5, true);
 	tableWidth = w * 4 + 2;
 	tableHeight = h * 2 + 1 + 3;
 	tableStartX = tableWidth / 2;
 	tableStartY = 7;
 	windowWidth = tableStartX * 2 + tableWidth + 26;
-	windowHeight = tableHeight + tableStartY * 2 +1;
-	menuX = 0, menuY = 0;
-	KingX = tableStartX / 2 - 4;
-	PretenderX = tableStartX * 3 / 2 - 4 + tableWidth;
-	nextBallsX = tableStartX + tableWidth / 2 - 7;
-	scoreKX = tableStartX / 2 - 3;
-	scorePX = tableWidth + tableStartX *3 /2 - 3;
-	nextBallsY = scoreKY = scorePY = 3;
-	promptX = tableStartX + 2;
-	promptY = tableStartY + tableHeight + 1;
-	statX = tableStartX * 2 + tableWidth + 1;
-	statY = tableStartY;
-
-
-
-	//KingY = calY(kingScore, score);
-	//PretenderY = calY(score);
-
+	windowHeight = tableHeight + tableStartY * 2 + 1;
 	setconsoleborder(hout, windowWidth, windowHeight);
-	restoreColor();
-	system("cls");
+	while (true) {
+		const int nextBallNum = 3;
+		int gameMap[CL_MAXGRID + 2][CL_MAXGRID + 2];
+		int pathMap[CL_MAXGRID + 2][CL_MAXGRID + 2] = { 0 };
+		
+		
+		int menuX, menuY, KingX = 0, KingY = 0, PretenderX = 0, PretenderY = 0, scoreKX, scoreKY, nextBallsX, nextBallsY, scorePX, scorePY, promptX, promptY, statX, statY;
+		int *path;
+		int nextBalls[nextBallNum + 1] = { 0,0,0 };
+		int source, dest;
+		int score = 0, thisScore = 0, kingScore = 100, thisBallCount = 0;
+		bool exitFlag = false, fnFlag = false;
+		bool restartFlag = false, nextBallsVisible = true, gameStatsVisible = true;
+		int gameStats[] = { 0,0,0,0,0,0,0,0,0 };
+		int gameStatsBallDel[] = { 0,0,0,0,0,0,0,0,0 };
+		int actionRet;
 
-	drawInitUI(tableWidth, tableHeight, tableStartX, tableStartY, menuX, menuY, KingX, PretenderX, KingY, PretenderY, nextBallsX, nextBallsY, scoreKX, scoreKY, scorePX, scorePY, gameMap, windowWidth, statX, statY);
+		initializeMap(gameMap, w, h);
+		randomEmerge(gameMap, 5, true);
+		
+		menuX = 0, menuY = 0;
+		KingX = tableStartX / 2 - 4;
+		PretenderX = tableStartX * 3 / 2 - 4 + tableWidth;
+		nextBallsX = tableStartX + tableWidth / 2 - 7;
+		scoreKX = tableStartX / 2 - 3;
+		scorePX = tableWidth + tableStartX * 3 / 2 - 3;
+		nextBallsY = scoreKY = scorePY = 3;
+		promptX = tableStartX + 2;
+		promptY = tableStartY + tableHeight + 1;
+		statX = tableStartX * 2 + tableWidth + 1;
+		statY = tableStartY;
 
-	
 
-	do
-	{
-		score += thisScore;
-		if(thisBallCount==0)
-			regenBalls(nextBalls);
-		updateScore(score, scorePX, scorePY);
-		updateNextBalls(nextBalls, nextBallsX, nextBallsY);
-		updateStats(gameMap, gameStats, gameStatsBallDel, statX, statY);
 
-		graphicTable(gameMap, tableStartX, tableStartY);
+		//KingY = calY(kingScore, score);
+		//PretenderY = calY(score);
+		restoreColor();
+		system("cls");
 
-		thisScore = 0;
-		thisBallCount = false;
+		drawInitUI(tableWidth, tableHeight, tableStartX, tableStartY, menuX, menuY, KingX, PretenderX, KingY, PretenderY, nextBallsX, nextBallsY, scoreKX, scoreKY, scorePX, scorePY, gameMap, windowWidth, statX, statY);
 
-		initializeMap(pathMap, w, h, -1, 0);
-
-		while (true)
+		do
 		{
-			if (inputMoveByMouse(gameMap, source, dest, tableStartX, tableStartY, promptX, promptY, promptX, promptY + 2, -1, -1, -1, -1) == -1)
-			{
-				exitFlag = true;
-				break;
-			}
+			score += thisScore;
+			if (thisBallCount == 0 && !fnFlag)
+				regenBalls(nextBalls);
+			updateScore(score, scorePX, scorePY);
+			updateNextBalls(nextBalls, nextBallsX, nextBallsY, nextBallsVisible, false, true);
+			updateStats(gameMap, gameStats, gameStatsBallDel, statX, statY, tableHeight, gameStatsVisible, false, true);
 
-			path = staticPath(gameMap, source, dest);
+			graphicTable(gameMap, tableStartX, tableStartY);
 
-			restoreColor();
-			gotoxy(hout, promptX, promptY + 3);
+			thisScore = 0;
+			thisBallCount = false;
+			fnFlag = false;
 
-			if (*path == 0)
+			initializeMap(pathMap, w, h, -1, 0);
+
+			while (true)
 			{
-				//No path.
-				cout << "找不到路。" << endl;
-			}
-			else
-			{
-				graphicRoute(gameMap, path, tableStartX, tableStartY, *getGridPointer(gameMap, source));
-				ballMove(gameMap, source, dest);
-				thisBallCount = checkIAR(gameMap, dest, &thisScore, true, NULL, 0, gameStatsBallDel);
-				gotoxy(hout, promptX, promptY + 3);
+				actionRet = inputMoveByMouse(gameMap, source, dest, tableStartX, tableStartY, promptX, promptY, promptX, promptY + 2, -1, -1, -1, -1, keyBoard);
+				if (actionRet == -1)
+				{
+					exitFlag = true;
+					break;
+				}
+				if (actionRet >= 0x72 && actionRet <= 0x74)
+				{
+					if(actionRet == 0x73)
+					{
+						restartFlag = true;
+					}
+					else if (actionRet == 0x72)
+					{
+						nextBallsVisible = !nextBallsVisible;
+						updateNextBalls(nextBalls, nextBallsX, nextBallsY, nextBallsVisible, true, false);
+						fnFlag = true;
+					}
+					else if (actionRet == 0x74)
+					{
+						gameStatsVisible = !gameStatsVisible;
+						updateStats(gameMap, gameStats, gameStatsBallDel, statX, statY, tableHeight, gameStatsVisible, true, false);
+						fnFlag = true;
+					}
+					break;
+				}
+
+				path = staticPath(gameMap, source, dest);
+
 				restoreColor();
-				cout << "移动成功。" << endl;
+				gotoxy(hout, promptX, promptY + 3);
+
+				if (*path == 0)
+				{
+					//No path.
+					cout << "找不到路。" << endl;
+				}
+				else
+				{
+					graphicRoute(gameMap, path, tableStartX, tableStartY, *getGridPointer(gameMap, source));
+					ballMove(gameMap, source, dest);
+					thisBallCount = checkIAR(gameMap, dest, &thisScore, true, NULL, 0, gameStatsBallDel);
+					gotoxy(hout, promptX, promptY + 3);
+					restoreColor();
+					cout << "移动成功。" << endl;
+					break;
+				}
+			}
+			if (exitFlag)
+			{
 				break;
 			}
-		}
-		if (exitFlag)
+			if (restartFlag)
+			{
+				break;
+			}
+			if (fnFlag)
+			{
+				continue;
+			}
+		} while (thisBallCount == 0 && !fnFlag && randomEmerge(gameMap, 3, true, nextBalls) || thisBallCount != 0 || fnFlag);
+		if (restartFlag)
 		{
-			break;
+			restartFlag = false;
+			continue;
 		}
-	} while (thisBallCount==0 && randomEmerge(gameMap, 3, true, nextBalls) || thisBallCount!=0);
-	graphicTable(gameMap, tableStartX, tableStartY);
-	gotoxy(hout, promptX, promptY + 2);
-	setcursor(hout, CURSOR_VISIBLE_NORMAL);
-	cout << "游戏结束，你的得分是：" << score << endl;
-	pressEnterToContinue();
+		graphicTable(gameMap, tableStartX, tableStartY);
+		gotoxy(hout, promptX, promptY + 2);
+		setcursor(hout, CURSOR_VISIBLE_NORMAL);
+		cout << "游戏结束，你的得分是：" << score << endl;
+		pressEnterToContinue();
+		return;
+	}
+	
+}
+
+void part9()
+{
+	if (1) {
+		int X = 0, Y = 0;
+		int action;
+		int loop = 1;
+		int bothClicked = -1;
+		restoreColor();
+		system("cls");
+		enable_mouse(hin);
+
+		/* 打印初始光标位置[0,0] */
+		setcursor(hout, CURSOR_INVISIBLE);	//关闭光标
+		cout << "可测试左键单/双击,右键单/双击,左右键同时单击五种，其中右键双击结束鼠标测试" << endl;
+		cout << "[当前鼠标位置] X:0  Y:0"; //打印初始鼠标位置
+
+		while (loop) {
+			/* 读鼠标，返回值为下述操作中的某一种, 当前鼠标位置在<X,Y>处 */
+			action = read_mouse(hin, X, Y, 1);
+
+			/* 转到第1行进行打印 */
+			gotoxy(hout, 0, 1);
+			cout << "[当前光标位置] X:" << setw(2) << X << " Y:" << setw(2) << Y << " 操作:";
+			if(bothClicked != -1)
+				if (bothClicked == 0 && (action == MOUSE_LEFT_BUTTON_CLICK || action == MOUSE_RIGHT_BUTTON_CLICK))
+				{
+					bothClicked = action;
+					continue;
+				}
+				else if (bothClicked == action)
+				{
+					continue;
+				}
+				else 
+				{
+					bothClicked = -1;
+				}
+			switch (action) {
+				case MOUSE_LEFT_BUTTON_CLICK:			//按下左键
+					cout << "按下左键      " << endl;
+					showch(hout, X, Y, '1', colorList[0], colorList[1]);			//在鼠标指针位置显示1
+					break;
+				case MOUSE_LEFT_BUTTON_DOUBLE_CLICK:	//双击左键
+					cout << "双击左键      " << endl;
+					showch(hout, X, Y, '2', colorList[0], colorList[1]);			//在鼠标指针位置显示2
+					break;
+				case MOUSE_RIGHT_BUTTON_CLICK:			//按下右键
+					cout << "按下右键      " << endl;
+					showch(hout, X, Y, '3', colorList[0], colorList[1]);			//在鼠标指针位置显示3
+					break;
+				case MOUSE_RIGHT_BUTTON_DOUBLE_CLICK:	//双击右键
+					cout << "双击右键      " << endl;
+					showch(hout, X, Y, '4', colorList[0], colorList[1]);			//在鼠标指针位置显示4
+					loop = 0;
+					break;
+				case MOUSE_LEFTRIGHT_BUTTON_CLICK:		//同时按下左右键
+					cout << "同时按下左右键" << endl;
+					showch(hout, X, Y, '5', colorList[0], colorList[1]);			//在鼠标指针位置显示5
+					bothClicked = 0;
+					break;
+				case MOUSE_ONLY_MOVED:
+					cout << "移动          " << endl;
+					//showch(hout, X, Y, '*');不打印任何内容
+					break;
+				case MOUSE_NO_ACTION:
+				default:
+					cout << "其它操作" << endl;
+					showch(hout, X, Y, '0', colorList[0], colorList[1]);			//在鼠标指针位置显示0
+					break;
+			} //end of switch
+		} //end of while(1)
+
+		setcursor(hout, CURSOR_VISIBLE_NORMAL);	//打开光标
+		pressEnterToContinue();
+	}
 }
 
 int main()
@@ -387,10 +504,17 @@ int main()
 				part6OnceMove();
 				break;
 			case 7:
-				part7GraphicFull();
+				part7GraphicFull(false);
+				break;
+			case 8:
+				part7GraphicFull(true);
+				break;
+			case 9:
+				part9();
 				break;
 		}
 
 	}
 	return 0;
 }
+
