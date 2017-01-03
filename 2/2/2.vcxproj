@@ -20,11 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="sub.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{d02783c1-4ddb-4b7f-93fb-d6db27652b94}</ProjectGuid>
-    <RootNamespace>SJReport3DebugTool</RootNamespace>
+    <ProjectGuid>{46d4ebf6-1902-48d9-8080-ed4d2d0e3ffc}</ProjectGuid>
+    <RootNamespace>_2</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

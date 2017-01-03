@@ -19,12 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="sub.cpp" />
+    <ClCompile Include="demo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{d02783c1-4ddb-4b7f-93fb-d6db27652b94}</ProjectGuid>
-    <RootNamespace>SJReport3DebugTool</RootNamespace>
+    <ProjectGuid>{8ab7b8d3-7bc2-4165-95fa-5fe56745d480}</ProjectGuid>
+    <RootNamespace>SJDemo</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

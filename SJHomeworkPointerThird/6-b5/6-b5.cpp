@@ -8,7 +8,7 @@ using namespace std;
 int main()
 {
 	//REINPUT:
-	char bin[FS_LEN],*end;
+	char bin[FS_LEN + 1],*end;
 	int val = 0, len, unit = 1;
 	cout << "请输入二进制：";
 	cin >> bin;

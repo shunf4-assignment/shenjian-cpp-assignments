@@ -17,7 +17,7 @@ bool isPalindrome(char * str)
 
 int main()
 {
-	char str[FS_LEN] = { 0 };
+	char str[FS_LEN +1] = { 0 };
 	cout << "ÇëÊäÈëÒ»¸ö×Ö·û´®£º";
 	gets_s(str);
 	if (isPalindrome(str))

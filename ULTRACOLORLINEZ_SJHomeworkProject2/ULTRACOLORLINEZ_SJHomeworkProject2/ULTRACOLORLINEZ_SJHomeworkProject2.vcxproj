@@ -19,12 +19,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="sub.cpp" />
+    <ClInclude Include="90-b2.h" />
+    <ClInclude Include="cmd_console_tools.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="90-b2-base.cpp" />
+    <ClCompile Include="90-b2-console.cpp" />
+    <ClCompile Include="90-b2-main.cpp" />
+    <ClCompile Include="90-b2-tools.cpp" />
+    <ClCompile Include="cmd_console_test.cpp" />
+    <ClCompile Include="cmd_console_tools.cpp" />
+    <None Include="SJHomework 标准项2.cpp">
+      <SubType>
+      </SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Text.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{d02783c1-4ddb-4b7f-93fb-d6db27652b94}</ProjectGuid>
-    <RootNamespace>SJReport3DebugTool</RootNamespace>
+    <ProjectGuid>{989d9d84-b7db-4fb3-9776-47ea1d8f6301}</ProjectGuid>
+    <RootNamespace>ULTRACOLORLINEZ_SJHomeworkProject2</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
