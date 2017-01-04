@@ -1,5 +1,5 @@
 /* 1652270 计算机2班 冯舜 */
-/*90-b2-base.cpp*/
+/*90-b2-console.cpp*/
 #include "90-b2.h"
 /* For completing all graphic operations such as print tables and frames, change fonts and textsize and do things related to the cursor*/
 
@@ -100,49 +100,53 @@ void graphicNoInsideBorder(int(*mapArray)[CL_MAXGRID + 2], int x, int y)
 	gotoxy(hout, x, y+h+2);
 }
 
-void graphicTable(int(*mapArray)[CL_MAXGRID + 2], int x, int y)
+void graphicTable(int(*mapArray)[CL_MAXGRID + 2], int x, int y, bool border)
 {
 	int w, h;
 	getMapWidthHeight(mapArray, w, h);
-	for (int r = 0; r <= h + 1; r++)
+	if (border)
 	{
-		if (r == 0 || r == h + 1)
+		for (int r = 0; r <= h + 1; r++)
 		{
-			gotoxy(hout, x, y + r * 2 - 2* (r==h+1));
-			cout << box[r == h + 1 ? 8 : 0] << box[r == h + 1 ? 9 : 1];
-			for (int c = 0; c < w; c++)
+			if (r == 0 || r == h + 1)
 			{
-				cout << box[2] << box[3];
-				if (c != w - 1)
-				{
-					cout << boxIn[r == h + 1 ? 8 : 0] << boxIn[r == h + 1 ? 9 : 1];
-				}
-			}
-			cout << box[r == h + 1 ? 10 : 4] << box[r == h + 1 ? 11 : 5];
-		}
-		else
-		{
-			gotoxy(hout, x, y + r * 2 - 1);
-			cout << box[6] << box[7];
-			for (int sp = 0; sp < w; sp++)
-			{
-				cout << setw(2) << "";
-				cout << box[6] << box[7];
-			}
-			gotoxy(hout, x, y + r * 2 );
-			if (r != h)
-			{
-				cout << boxIn[2] << boxIn[3];
-				for (int sp = 0; sp < w; sp++)
+				gotoxy(hout, x, y + r * 2 - 2 * (r == h + 1));
+				cout << box[r == h + 1 ? 8 : 0] << box[r == h + 1 ? 9 : 1];
+				for (int c = 0; c < w; c++)
 				{
 					cout << box[2] << box[3];
-					if (sp != w - 1)
-						cout << boxIn[4] << boxIn[5];
+					if (c != w - 1)
+					{
+						cout << boxIn[r == h + 1 ? 8 : 0] << boxIn[r == h + 1 ? 9 : 1];
+					}
 				}
-				cout << boxIn[6] << boxIn[7];
+				cout << box[r == h + 1 ? 10 : 4] << box[r == h + 1 ? 11 : 5];
+			}
+			else
+			{
+				gotoxy(hout, x, y + r * 2 - 1);
+				cout << box[6] << box[7];
+				for (int sp = 0; sp < w; sp++)
+				{
+					cout << setw(2) << "";
+					cout << box[6] << box[7];
+				}
+				gotoxy(hout, x, y + r * 2);
+				if (r != h)
+				{
+					cout << boxIn[2] << boxIn[3];
+					for (int sp = 0; sp < w; sp++)
+					{
+						cout << box[2] << box[3];
+						if (sp != w - 1)
+							cout << boxIn[4] << boxIn[5];
+					}
+					cout << boxIn[6] << boxIn[7];
+				}
 			}
 		}
 	}
+	
 
 	for (int i = 1; i <= w; i++)
 	{
@@ -235,8 +239,88 @@ void addGraphicalBall(int startX, int startY, int currPos, int ballType, int bgC
 	}
 }
 
-void drawInitUI(int tableWidth, int tableHeight, int tableStartX, int tableStartY, int menuX, int menuY, int KingX, int PretenderX, int KingY, int PretenderY, int nextBallsX, int nextBallsY, int scoreKX, int scoreKY, int scorePX, int scorePY, int(*gameMap)[CL_MAXGRID + 2], int windowWidth, int statX, int statY)
+void calHeight(int score, int kingScore, int height, int &hp, int &hk)
 {
+	if (score > kingScore)
+	{
+		hp = height;
+		hk = height - (score - kingScore) / 20;
+		(hk < 0) && (hk = 0);
+	}
+	else
+	{
+		hk = height;
+		hp = int(height * (score * 1. / kingScore));
+	}
+}
+
+void updateKingPret(int score, int kingScore, int KingX, int KingY, int PretenderX, int PretenderY, bool dialog)
+{
+	int hk, hp;
+	calHeight(score, kingScore, kingHeight, hp, hk);
+
+	for (int i = -1; i < int(kingHeight + strlen(kingStr) / kingLen); i++)
+	{
+		gotoxy(hout, KingX - 2, KingY + i);
+		cout << setw(kingLen + 8) << "";
+	}
+	for (int i = -1; i < int(kingHeight + strlen(pretStr) / pretLen); i++)
+	{
+		gotoxy(hout, PretenderX - 2, PretenderY + i);
+		cout << setw(pretLen + 8) << "";
+	}
+	if (dialog)
+	{
+		gotoxy(hout, KingX, KingY + kingHeight - hk - 1);
+		cout << "@顺 来";
+
+		gotoxy(hout, PretenderX - 2, PretenderY + kingHeight - hp - 1);
+		cout << "反、反抗沈坚暴政";
+	}
+
+	setcolor(hout, colorList[0], colorList[CL_BALLNUM + 4]);
+	for (char *p = (char *)((kingScore > score) ? kingStr : kingDef); *p;)
+	{
+		gotoxy(hout, KingX, KingY + (p - ((kingScore > score) ? kingStr : kingDef)) / kingLen + kingHeight - hk);
+		for (int i = 0; i < kingLen; i++)
+		{
+			cout << *p;
+			p++;
+		}
+	}
+
+	setcolor(hout, colorList[CL_BALLNUM + 3], colorList[CL_BALLNUM + 4]);
+	for (int i = 0; i < hk + 1; i++)
+	{
+		gotoxy(hout, KingX, KingY + strlen(kingStr) / kingLen + kingHeight - i);
+		for (int j = 0; j < kingLen / 2; j++)
+			cout << "  ";
+	}
+
+	setcolor(hout, colorList[0], colorList[CL_BALLNUM + 5]);
+	for (char *p = (char *)((kingScore > score) ? pretStr : pretWin); *p;)
+	{
+		gotoxy(hout, PretenderX, PretenderY + (p - ((kingScore > score) ? pretStr : pretWin)) / pretLen + kingHeight - hp);
+		for (int i = 0; i < pretLen; i++)
+		{
+			cout << *p;
+			p++;
+		}
+	}
+	setcolor(hout, colorList[CL_BALLNUM + 3], colorList[CL_BALLNUM + 5]);
+	for (int i = 0; i < hp + 1; i++)
+	{
+		gotoxy(hout, PretenderX, PretenderY + strlen(pretStr) / pretLen + kingHeight - i);
+		for (int j = 0; j < pretLen / 2; j++)
+			cout << "  ";
+	}
+	restoreColor();
+}
+
+void drawInitUI(int tableWidth, int tableHeight, int tableStartX, int tableStartY, int menuX, int menuY, int KingX, int PretenderX, int KingY, int PretenderY, int nextBallsX, int nextBallsY, int scoreKX, int scoreKY, int scorePX, int scorePY, int(*gameMap)[CL_MAXGRID + 2], int windowWidth, int statX, int statY, bool nextBallsVisible, bool gameStatsVisible, int score, int kingScore)
+{
+	
+
 	gotoxy(hout, menuX, menuY);
 	setcolor(hout, COLOR_WHITE, COLOR_BLACK);
 	cout << setw(windowWidth) << "";
@@ -245,9 +329,11 @@ void drawInitUI(int tableWidth, int tableHeight, int tableStartX, int tableStart
 	restoreColor();
 	cout << "┏━━━┓";
 	gotoxy(hout, scoreKX, scoreKY + 1);
-	cout << "┃ " << setw(4) << "" << " ┃";
+	cout << "┃ " << " 100" << " ┃";
 	gotoxy(hout, scoreKX, scoreKY + 2);
 	cout << "┗━━━┛";
+	gotoxy(hout, scoreKX, scoreKY + 3);
+	cout << "  沈坚  ";
 
 	gotoxy(hout, scorePX, scorePY);
 	restoreColor();
@@ -256,10 +342,12 @@ void drawInitUI(int tableWidth, int tableHeight, int tableStartX, int tableStart
 	cout << "┃ " << setw(4) << "" << " ┃";
 	gotoxy(hout, scorePX, scorePY+2);
 	cout << "┗━━━┛";
-
-	updateNextBalls(NULL, nextBallsX, nextBallsY, true, true, false);
-
-	updateStats(NULL, NULL, NULL, statX, statY, tableHeight, true, true, false);
+	gotoxy(hout, scorePX, scorePY + 3);
+	cout << "    顺  ";
+	
+	updateKingPret(score, kingScore, KingX, KingY, PretenderX, PretenderY, true);
+	updateNextBalls(NULL, nextBallsX, nextBallsY, nextBallsVisible, true, false); updateKingPret(score, kingScore, KingX, KingY, PretenderX, PretenderY);
+	updateStats(NULL, NULL, NULL, statX, statY, tableHeight, gameStatsVisible, true, false);
 }
  
 void updateScore(int score, int scorePX, int scorePY)
@@ -281,11 +369,11 @@ void updateNextBalls(int *nextBalls, int nextBallsX, int nextBallsY, bool visibl
 		{
 			gotoxy(hout, nextBallsX, nextBallsY);
 			restoreColor();
-			cout << "╔─╦─╦─╗";
+			cout << "╔━╦━╦━╗";
 			gotoxy(hout, nextBallsX, nextBallsY + 1);
-			cout << "│  │  │  │";
+			cout << "┃  ┃  ┃  ┃";
 			gotoxy(hout, nextBallsX, nextBallsY + 2);
-			cout << "╘─╧─╧─╛";
+			cout << "╚━╩━╩━╝";
 		}
 		else
 		{
@@ -328,12 +416,12 @@ void updateStats(int (*gameMap)[CL_MAXGRID+2], int *gameStats, int *gameStatsBal
 			gotoxy(hout, statX, statY);
 			restoreColor();
 			cout << "╔━━━━━━━━━━╗";
-			for (int i = 1; i <= tableHeight - 2; i++)
+			for (int i = 1; i <= tableHeight -5; i++)
 			{
 				gotoxy(hout, statX, statY + i);
 				cout << "┃                    ┃";
 			}
-			gotoxy(hout, statX, statY + tableHeight - 1);
+			gotoxy(hout, statX, statY + tableHeight - 4);
 			cout << "╚━━━━━━━━━━╝";
 		}
 		else
@@ -373,7 +461,7 @@ void updateStats(int (*gameMap)[CL_MAXGRID+2], int *gameStats, int *gameStatsBal
 			}
 		}
 		gotoxy(hout, statX + 3, statY + 1);
-		cout << setiosflags(ios::fixed) << setprecision(1) << "空：" << empty << "(" << empty*100. / (w*h) << "%)";
+		cout << setiosflags(ios::fixed) << setprecision(1) << "空：" << setw(2) << empty << "(" << setw(4) << empty*100. / (w*h) << "%)";
 		for (int i = 0; i < CL_BALLNUM; i++)
 		{
 			gotoxy(hout, statX + 2, statY + i + 3);
@@ -385,4 +473,29 @@ void updateStats(int (*gameMap)[CL_MAXGRID+2], int *gameStats, int *gameStatsBal
 	}
 	
 
+}
+
+void graphicRoute(int(*gameMap)[CL_MAXGRID + 2], int *path, int tableStartX, int tableStartY, int ballType)
+{
+	int pathCount = 1;
+	int x0, y0, x1, y1;
+	path--;
+	while (*path)
+	{
+		decodePos_(*path, y1, x1);
+		decodePos_(*(path + 1), y0, x0);
+
+
+		addGraphicalBall(tableStartX, tableStartY, *(path + 1), 0, colorList[0]);
+		addGraphicalBall(tableStartX, tableStartY, *(path + 1), ballType, colorList[0], (x1 - x0 + 1) + 3 * (y1 - y0 + 1));
+		Sleep(sleepTime1 / 2);
+
+		addGraphicalBall(tableStartX, tableStartY, *path, ballType, colorList[0]);
+		addGraphicalBall(tableStartX, tableStartY, *(path + 1), 0, colorList[0], (x1 - x0 + 1) + 3 * (y1 - y0 + 1));
+
+		Sleep(sleepTime1 / 2);
+
+		pathCount++;
+		path--;
+	}
 }

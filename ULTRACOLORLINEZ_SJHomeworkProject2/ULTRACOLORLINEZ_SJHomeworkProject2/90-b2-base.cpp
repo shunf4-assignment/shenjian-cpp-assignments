@@ -53,7 +53,7 @@ void getMapWidthHeight(int(*map)[CL_MAXGRID + 2], int &width, int &height)
 //随机在地图涌现几个球，颜色完全随机。返回true表示成功，返回false表示地图已经满了（包括已经满了），所以填不下去。
 bool randomEmerge(int(*map)[CL_MAXGRID + 2], int num, bool autoFlush, int *nextBalls)
 {
-	int emptyArray[CL_MAXGRID*CL_MAXGRID+1] = { 0 };
+	int emptyArray[CL_MAXGRID*CL_MAXGRID+10] = { 0 };
 	int *e = emptyArray;
 	int i,ran,ran2,tmpLastPos;
 	int w,h;
@@ -253,10 +253,12 @@ int checkIAR(int(*gameMap)[CL_MAXGRID + 2], int startPoint, int *score, bool giv
 	int sameColor = *getGridPointer(gameMap, startPoint);
 	int ballCount = 0;
 	int ballCountPart = 0;
+	int trueBallCount = 0;
 	int startPointP[2] = { (tmp = decodePos(startPoint),tmp[0]),tmp[1] };
 	int w,h;
 	getMapWidthHeight(gameMap, w, h);
 	
+	trueBallCount = 1;
 	while (*p)
 	{
 		ballCountPart = 0;
@@ -272,6 +274,7 @@ int checkIAR(int(*gameMap)[CL_MAXGRID + 2], int startPoint, int *score, bool giv
 			p++, p++;
 		}
 		ballCountPart--;
+		trueBallCount += ballCountPart - 1;
 		if (ballCountPart >= 5)
 		{
 			p -= 4;
@@ -306,7 +309,7 @@ int checkIAR(int(*gameMap)[CL_MAXGRID + 2], int startPoint, int *score, bool giv
 		}
 		if (gameStats != NULL)
 		{
-			gameStats[sameColor] += ballCount;
+			gameStats[sameColor] += trueBallCount;
 		}
 		//msg("ballcount:%i", ballCount);
 	}

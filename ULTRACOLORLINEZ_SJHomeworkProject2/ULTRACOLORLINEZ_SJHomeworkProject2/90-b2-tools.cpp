@@ -1,7 +1,6 @@
-
+/* 1652270 ¼ÆËã»ú2°à ·ëË´ */
+/*90-b2-tools.cpp*/
 #include "90-b2.h"
-
-
 
 void arrayShift(int * arr, int lastPos, int removePos)
 {
@@ -187,31 +186,6 @@ int inputMoveByMouse(int(*gameMap)[CL_MAXGRID + 2], int &source, int&dest, int t
 	addGraphicalBall(tableStartX, tableStartY, source, *getGridPointer(gameMap, source), colorList[0]);
 	addGraphicalBall(tableStartX, tableStartY, dest, *getGridPointer(gameMap, dest), colorList[0]);
 	return 0;
-}
-
-void graphicRoute(int(*gameMap)[CL_MAXGRID + 2], int *path, int tableStartX, int tableStartY, int ballType)
-{
-	int pathCount = 1;
-	int x0, y0, x1, y1;
-	path--;
-	while (*path)
-	{
-		decodePos_(*path, y1, x1);
-		decodePos_(*(path+1), y0, x0);
-
-		
-		addGraphicalBall(tableStartX, tableStartY, *(path + 1), 0, colorList[0]);
-		addGraphicalBall(tableStartX, tableStartY, *(path + 1), ballType, colorList[0], (x1 - x0 + 1) + 3 * (y1 - y0 + 1));
-		Sleep(sleepTime1/2);
-
-		addGraphicalBall(tableStartX, tableStartY, *path, ballType, colorList[0]);
-		addGraphicalBall(tableStartX, tableStartY, *(path + 1), 0, colorList[0], (x1 - x0 + 1) + 3 * (y1 - y0 + 1));
-		
-		Sleep(sleepTime1/2);
-
-		pathCount++;
-		path--;
-	}
 }
 
 int read_mouse_and_key(const HANDLE hin, int &X, int &Y, const int enable_read_mouse_moved)

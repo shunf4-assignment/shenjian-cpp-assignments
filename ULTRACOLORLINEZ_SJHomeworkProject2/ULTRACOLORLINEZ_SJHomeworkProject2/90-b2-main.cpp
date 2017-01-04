@@ -7,7 +7,9 @@ void part1PrintArray()
 	bool emergeSuc = false;
 	int gameMap[CL_MAXGRID + 2][CL_MAXGRID + 2];
 	int w=9, h=9;
+	setfontsize(hout, L"新宋体", 30);
 
+	system("cls");
 	srand((unsigned int)time(0) + 2);
 	inputThing(&w, "请输入游戏区域的宽(7-9)：", "输入非法！", "输入超过限制！", 7, 9, true);
 	inputThing(&h, "请输入游戏区域的高(7-9)：", "输入非法！", "输入超过限制！", 7, 9, true);
@@ -31,6 +33,8 @@ void part2FindMove()
 	int source, dest;
 	//地址可以编码为一个int，即行号*10+列号。
 
+	system("cls");
+	setfontsize(hout, L"新宋体", 30);
 	inputWidthHeight(w, h);
 
 	initializeMap(gameMap, w, h);
@@ -38,7 +42,11 @@ void part2FindMove()
 	randomEmerge(gameMap, (int)floor(w*h*0.6));
 	printArray(gameMap);
 
-	inputMove(gameMap, source, dest);
+	if (!inputMove(gameMap, source, dest))
+	{
+		pressEnterToContinue();
+		return;
+	}
 	
 	path = staticPath(gameMap, source, dest);
 	if (*path == 0)
@@ -68,7 +76,7 @@ void part3FullFunction()
 	int score = 0, thisScore = 0, thisBallCount = 0;
 	bool exitFlag = false;
 	//地址可以编码为一个int，即行号*10+列号。
-
+	setfontsize(hout, L"新宋体", 30);
 	inputWidthHeight(w, h);
 
 	initializeMap(gameMap, w, h);
@@ -142,6 +150,7 @@ void part4Frame()
 	printArray(gameMap);
 	cout << endl << "下面将显示图形。" << endl;
 	pressEnterToContinue();
+	system("cls");
 	getxy(hout, x, y);
 	graphicNoInsideBorder(gameMap, x, y);
 	pressEnterToContinue();
@@ -161,8 +170,10 @@ void part5Table()
 	printArray(gameMap);
 	cout << endl << "下面将显示图形。" << endl;
 	pressEnterToContinue();
+	system("cls");
+
 	getxy(hout, x, y);
-	graphicTable(gameMap, x, y);
+	graphicTable(gameMap, x, y, true);
 	pressEnterToContinue();
 }
 
@@ -192,7 +203,7 @@ void part6OnceMove()
 	restoreColor();
 	system("cls");
 
-	graphicTable(gameMap, tableStartX, tableStartY);
+	graphicTable(gameMap, tableStartX, tableStartY, true);
 	getxy(hout, x, y);
 	if (inputMoveByMouse(gameMap, source, dest, tableStartX, tableStartY, x, y, x, y + 1, -1, -1, -1, -1, false) != -1)
 	{
@@ -223,10 +234,11 @@ void part7GraphicFull(bool keyBoard)
 {
 	int w = 9, h = 9;
 	int windowWidth, windowHeight, tableWidth, tableHeight, tableStartX, tableStartY;
+	bool  nextBallsVisible = true, gameStatsVisible = true;
 	inputWidthHeight(w, h);
 	tableWidth = w * 4 + 2;
 	tableHeight = h * 2 + 1 + 3;
-	tableStartX = tableWidth / 2;
+	tableStartX = tableWidth *5 /7;
 	tableStartY = 7;
 	windowWidth = tableStartX * 2 + tableWidth + 26;
 	windowHeight = tableHeight + tableStartY * 2 + 1;
@@ -240,10 +252,9 @@ void part7GraphicFull(bool keyBoard)
 		int menuX, menuY, KingX = 0, KingY = 0, PretenderX = 0, PretenderY = 0, scoreKX, scoreKY, nextBallsX, nextBallsY, scorePX, scorePY, promptX, promptY, statX, statY;
 		int *path;
 		int nextBalls[nextBallNum + 1] = { 0,0,0 };
-		int source, dest;
-		int score = 0, thisScore = 0, kingScore = 100, thisBallCount = 0;
-		bool exitFlag = false, fnFlag = false;
-		bool restartFlag = false, nextBallsVisible = true, gameStatsVisible = true;
+		int source, dest = -1;
+		int score = 0, kingScore = 100, thisScore = 0, thisBallCount = 0;
+		bool exitFlag = false, fnFlag = false, restartFlag = false, defeatSJ = false, firstTime = true;
 		int gameStats[] = { 0,0,0,0,0,0,0,0,0 };
 		int gameStatsBallDel[] = { 0,0,0,0,0,0,0,0,0 };
 		int actionRet;
@@ -255,22 +266,20 @@ void part7GraphicFull(bool keyBoard)
 		KingX = tableStartX / 2 - 4;
 		PretenderX = tableStartX * 3 / 2 - 4 + tableWidth;
 		nextBallsX = tableStartX + tableWidth / 2 - 7;
-		scoreKX = tableStartX / 2 - 3;
-		scorePX = tableWidth + tableStartX * 3 / 2 - 3;
+		scoreKX = tableStartX / 2 - 4;
+		scorePX = tableWidth + tableStartX * 3 / 2 - 5;
 		nextBallsY = scoreKY = scorePY = 3;
 		promptX = tableStartX + 2;
 		promptY = tableStartY + tableHeight + 1;
 		statX = tableStartX * 2 + tableWidth + 1;
 		statY = tableStartY;
 
-
-
-		//KingY = calY(kingScore, score);
-		//PretenderY = calY(score);
+		KingY = PretenderY = 9;
 		restoreColor();
 		system("cls");
 
-		drawInitUI(tableWidth, tableHeight, tableStartX, tableStartY, menuX, menuY, KingX, PretenderX, KingY, PretenderY, nextBallsX, nextBallsY, scoreKX, scoreKY, scorePX, scorePY, gameMap, windowWidth, statX, statY);
+		drawInitUI(tableWidth, tableHeight, tableStartX, tableStartY, menuX, menuY, KingX, PretenderX, KingY, PretenderY, nextBallsX, nextBallsY, scoreKX, scoreKY, scorePX, scorePY, gameMap, windowWidth, statX, statY, nextBallsVisible, gameStatsVisible, score, kingScore);
+		graphicTable(gameMap, tableStartX, tableStartY, true);
 
 		do
 		{
@@ -278,10 +287,17 @@ void part7GraphicFull(bool keyBoard)
 			if (thisBallCount == 0 && !fnFlag)
 				regenBalls(nextBalls);
 			updateScore(score, scorePX, scorePY);
+			updateKingPret(score, kingScore, KingX, KingY, PretenderX, PretenderY, firstTime);
+			firstTime = false;
+			if (!defeatSJ && score > kingScore)
+			{
+				gotoxy(hout, promptX, promptY + 2);
+				cout << "你打倒了沈坚！！" << endl;
+			}
 			updateNextBalls(nextBalls, nextBallsX, nextBallsY, nextBallsVisible, false, true);
 			updateStats(gameMap, gameStats, gameStatsBallDel, statX, statY, tableHeight, gameStatsVisible, false, true);
 
-			graphicTable(gameMap, tableStartX, tableStartY);
+			graphicTable(gameMap, tableStartX, tableStartY, thisBallCount>0);
 
 			thisScore = 0;
 			thisBallCount = false;
@@ -357,7 +373,7 @@ void part7GraphicFull(bool keyBoard)
 			restartFlag = false;
 			continue;
 		}
-		graphicTable(gameMap, tableStartX, tableStartY);
+		graphicTable(gameMap, tableStartX, tableStartY, false);
 		gotoxy(hout, promptX, promptY + 2);
 		setcursor(hout, CURSOR_VISIBLE_NORMAL);
 		cout << "游戏结束，你的得分是：" << score << endl;
@@ -374,6 +390,9 @@ void part9()
 		int action;
 		int loop = 1;
 		int bothClicked = -1;
+		int onceClicked = -1;
+		DWORD lastTick = GetTickCount();
+		DWORD currTick = GetTickCount();
 		restoreColor();
 		system("cls");
 		enable_mouse(hin);
@@ -382,11 +401,11 @@ void part9()
 		setcursor(hout, CURSOR_INVISIBLE);	//关闭光标
 		cout << "可测试左键单/双击,右键单/双击,左右键同时单击五种，其中右键双击结束鼠标测试" << endl;
 		cout << "[当前鼠标位置] X:0  Y:0"; //打印初始鼠标位置
-
+		
 		while (loop) {
 			/* 读鼠标，返回值为下述操作中的某一种, 当前鼠标位置在<X,Y>处 */
 			action = read_mouse(hin, X, Y, 1);
-
+			lastTick = currTick;
 			/* 转到第1行进行打印 */
 			gotoxy(hout, 0, 1);
 			cout << "[当前光标位置] X:" << setw(2) << X << " Y:" << setw(2) << Y << " 操作:";
@@ -404,6 +423,56 @@ void part9()
 				{
 					bothClicked = -1;
 				}
+			if (onceClicked != -1)
+			{
+				if (onceClicked == action)
+				{
+					if ((currTick = GetTickCount()) <= lastTick + 100)
+					{
+						continue;
+					}
+					else
+					{
+						onceClicked = -1;
+					}
+				}
+				else if (action == MOUSE_ONLY_MOVED)
+				{
+					if ((currTick = GetTickCount()) <= lastTick + 100)
+					{
+						continue;
+					}
+					else
+					{
+						switch (onceClicked) {
+							case MOUSE_LEFT_BUTTON_CLICK:			//按下左键
+								cout << "按下左键      " << endl;
+								showch(hout, X, Y, '1', colorList[0], colorList[1]);			//在鼠标指针位置显示1
+								break;
+							case MOUSE_RIGHT_BUTTON_CLICK:			//按下右键
+								cout << "按下右键      " << endl;
+								showch(hout, X, Y, '3', colorList[0], colorList[1]);			//在鼠标指针位置显示3
+								break;
+						}
+						onceClicked = -1;
+						continue;
+					}
+				}
+				else
+				{
+					onceClicked = -1;
+				}
+			}
+			else
+			{
+				if (action == MOUSE_LEFT_BUTTON_CLICK || action == MOUSE_RIGHT_BUTTON_CLICK)
+				{
+					onceClicked = action;
+					currTick = GetTickCount();
+					cout << "              " << endl;
+					continue;
+				}
+			}
 			switch (action) {
 				case MOUSE_LEFT_BUTTON_CLICK:			//按下左键
 					cout << "按下左键      " << endl;
@@ -448,19 +517,19 @@ int main()
 {
 	int mode;
 	char opt;
-
 	srand(unsigned int(time(0)));
-
+	system("color f0");
 	while (true)
 	{
 		mode = 1;
 		setconsoleborder(hout, 80, 25);
 		restoreColor();
 		system("cls");
-
+		setfontsize(hout, L"新宋体", 20);
 		//freopen("in.txt", "r", stdin);
 
-		cout << "	---------------------------------------------\n\
+		cout << "\n            控制台彩球游戏 by 顺子\n\n\
+	---------------------------------------------\n\
 	1.内部数组，随机生成初始5个球\n\
 	2.内部数组，随机生成60%的球，寻找移动路径\n\
 	3.内部数组，完整版\n\
@@ -471,8 +540,8 @@ int main()
 	8.cmd图形界面完整版 - 支持同时读键（额外加分）\n\
 	9.双击及左右键同时按下操作屏蔽单击（额外加分）\n\
 	0.退出\n\
-	-------------------------------------------- -\n\
-		[请选择0 - 9]";
+	---------------------------------------------\n\
+	[请选择0 - 9]";
 
 		do {
 			opt = _getch();
@@ -482,7 +551,7 @@ int main()
 		mode = opt - '0';
 		if (mode == 0)
 			return 0;
-
+		system("cls");
 		switch (mode)
 		{
 			case 1:
@@ -501,12 +570,15 @@ int main()
 				part5Table();
 				break;
 			case 6:
+				setfontsize(hout, L"新宋体", 24);
 				part6OnceMove();
 				break;
 			case 7:
+				setfontsize(hout, L"新宋体", 24);
 				part7GraphicFull(false);
 				break;
 			case 8:
+				setfontsize(hout, L"新宋体", 24);
 				part7GraphicFull(true);
 				break;
 			case 9:
