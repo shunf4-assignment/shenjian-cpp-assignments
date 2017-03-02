@@ -19,18 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="demo.cpp">
+    <ClInclude Include="90-b1.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cmd_console_tools.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="90-b1-base.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="90-b1-console.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="90-b1-main.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="90-b1-tools.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="cmd_console_test.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="cmd_console_tools.cpp">
       <SubType>
       </SubType>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="sub.cpp" />
-    <ClCompile Include="sub2.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8ab7b8d3-7bc2-4165-95fa-5fe56745d480}</ProjectGuid>
-    <RootNamespace>SJDemo</RootNamespace>
+    <ProjectGuid>{e025d04d-c89e-4c6f-ae03-bb5b630048cf}</ProjectGuid>
+    <RootNamespace>main</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

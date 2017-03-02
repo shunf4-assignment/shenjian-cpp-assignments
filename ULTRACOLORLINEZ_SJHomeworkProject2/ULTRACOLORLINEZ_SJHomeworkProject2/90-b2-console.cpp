@@ -218,7 +218,7 @@ int mouseActions(int startX, int startY, int promptX, int promptY, int quitX, in
 	return -1;  // Û±Í
 }
 
-void addGraphicalBall(int startX, int startY, int currPos, int ballType, int bgColor, int offset)
+void addGraphicalBall(int startX, int startY, int currPos, int ballType, int bgColor, int offset, bool select)
 {
 	int i, j;
 	decodePos_(currPos, j, i);
@@ -226,7 +226,7 @@ void addGraphicalBall(int startX, int startY, int currPos, int ballType, int bgC
 	if (ballType != 0)
 	{
 		setcolor(hout, bgColor, colorList[ballType]);
-		cout << "°Ò";
+		cout << (select?"°Ú":"°Ò");
 	}
 	else if (offset != 4)
 	{
@@ -486,12 +486,12 @@ void graphicRoute(int(*gameMap)[CL_MAXGRID + 2], int *path, int tableStartX, int
 		decodePos_(*(path + 1), y0, x0);
 
 
-		addGraphicalBall(tableStartX, tableStartY, *(path + 1), 0, colorList[0]);
-		addGraphicalBall(tableStartX, tableStartY, *(path + 1), ballType, colorList[0], (x1 - x0 + 1) + 3 * (y1 - y0 + 1));
+		addGraphicalBall(tableStartX, tableStartY, *(path + 1), 0, colorList[0], 4, false);
+		addGraphicalBall(tableStartX, tableStartY, *(path + 1), ballType, colorList[0], (x1 - x0 + 1) + 3 * (y1 - y0 + 1), false);
 		Sleep(sleepTime1 / 2);
 
-		addGraphicalBall(tableStartX, tableStartY, *path, ballType, colorList[0]);
-		addGraphicalBall(tableStartX, tableStartY, *(path + 1), 0, colorList[0], (x1 - x0 + 1) + 3 * (y1 - y0 + 1));
+		addGraphicalBall(tableStartX, tableStartY, *path, ballType, colorList[0], 4, false);
+		addGraphicalBall(tableStartX, tableStartY, *(path + 1), 0, colorList[0], (x1 - x0 + 1) + 3 * (y1 - y0 + 1), false);
 
 		Sleep(sleepTime1 / 2);
 

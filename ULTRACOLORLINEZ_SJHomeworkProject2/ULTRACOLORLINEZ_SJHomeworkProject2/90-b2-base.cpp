@@ -280,7 +280,8 @@ int checkIAR(int(*gameMap)[CL_MAXGRID + 2], int startPoint, int *score, bool giv
 			p -= 4;
 			for (int i = 0; i < 2; i++)
 			{
-				thisPoint = decodePos(startPoint);
+				thisPoint[0] = decodePos(startPoint)[0];
+				thisPoint[1] = decodePos(startPoint)[1];
 				while (thisPoint[1] >= 1 && thisPoint[1] <= w && thisPoint[0] >= 1 && thisPoint[0] <= h && (gameMap[thisPoint[0]][thisPoint[1]] == sameColor || thisPoint[0] == startPointP[0] && thisPoint[1] == startPointP[1]))
 				{
 					gameMap[thisPoint[0]][thisPoint[1]] = 0;

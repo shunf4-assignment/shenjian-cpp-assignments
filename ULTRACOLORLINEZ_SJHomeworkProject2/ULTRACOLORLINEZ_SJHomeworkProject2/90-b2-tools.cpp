@@ -142,6 +142,7 @@ int inputMoveByMouse(int(*gameMap)[CL_MAXGRID + 2], int &source, int&dest, int t
 				if (source == currPos)
 				{
 					cout << "这个格子和移出球的位置相同！" << setw(10) << "" << endl;
+					printf("\a");
 					continue;
 				}
 
@@ -149,16 +150,17 @@ int inputMoveByMouse(int(*gameMap)[CL_MAXGRID + 2], int &source, int&dest, int t
 				{
 					if (*getGridPointer(gameMap, currPos) >= 2)
 					{
-						addGraphicalBall(tableStartX, tableStartY, source, *getGridPointer(gameMap, source), colorList[0]);
+						addGraphicalBall(tableStartX, tableStartY, source, *getGridPointer(gameMap, source), colorList[0], 4, false);
 						source = currPos;
 						restoreColor();
 						gotoxy(hout, prompt2X, prompt2Y);
 						cout << "移出球：" << numToLetter[currPos / (CL_MAXGRID + 1)] << "行" << currPos % (CL_MAXGRID + 1) << "列，球号 " << *getGridPointer(gameMap, currPos) << setw(10) << "" << endl;
-						addGraphicalBall(tableStartX, tableStartY, currPos, *getGridPointer(gameMap, currPos), colorList[CL_BALLNUM+2]);
+						addGraphicalBall(tableStartX, tableStartY, currPos, *getGridPointer(gameMap, currPos), colorList[CL_BALLNUM+2], 4, true);
 					}
 					else
 					{
 						cout << "这个格子不能放球！" << setw(10) << "" << endl;
+						printf("\a");
 					}
 					continue;
 				}
@@ -176,15 +178,15 @@ int inputMoveByMouse(int(*gameMap)[CL_MAXGRID + 2], int &source, int&dest, int t
 				source = currPos;
 				cout << "移出球：" << numToLetter[currPos / (CL_MAXGRID + 1)] << "行" << currPos % (CL_MAXGRID + 1) << "列，球号 " << *getGridPointer(gameMap, currPos) << setw(10) << "" << endl;
 
-				addGraphicalBall(tableStartX, tableStartY, currPos, *getGridPointer(gameMap, currPos), colorList[CL_BALLNUM + 2]);
+				addGraphicalBall(tableStartX, tableStartY, currPos, *getGridPointer(gameMap, currPos), colorList[CL_BALLNUM + 2], 4, true);
 			}
 			
 			break;
 		}
 		i++;
 	}
-	addGraphicalBall(tableStartX, tableStartY, source, *getGridPointer(gameMap, source), colorList[0]);
-	addGraphicalBall(tableStartX, tableStartY, dest, *getGridPointer(gameMap, dest), colorList[0]);
+	addGraphicalBall(tableStartX, tableStartY, source, *getGridPointer(gameMap, source), colorList[0], 4, false);
+	addGraphicalBall(tableStartX, tableStartY, dest, *getGridPointer(gameMap, dest), colorList[0], 4, false);
 	return 0;
 }
 

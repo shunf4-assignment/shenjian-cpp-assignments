@@ -2,9 +2,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <stdio.h>
-#include <windows.h>
 using namespace std;
-#define FS_MAX_LENGTH (numeric_limits<std::streamsize>::max)()
+#define FS_MAX_LENGTH (numeric_limits<std::streamsize>::max())
 
 template <typename T>
 void inputThing(T* p, const char * promptText, const char * cinUngoodText, const char * outLimitText, T lowerLimit, T upperLimit, bool clearBuffer = false)
@@ -94,15 +93,53 @@ void displayArr(T * p, int n = 1, bool bracket = false)
 		cout << " }";
 }
 
-int * kong(int *p)
+void mergeArray(int *p, int arrSize)
 {
-	p++;
-	return p;
+	int *p1 = p;
+	int *p2 = p + (arrSize + 1) / 2;
+	int *pNew = (int *)malloc(arrSize * sizeof(int));
+	int *pNew_ = pNew;
+	while (pNew < pNew_ + arrSize)
+	{
+		if (*p1 <= *p2 || p2 >= p + arrSize )
+		{
+			*pNew++ = *p1;
+			p1++;
+		}
+		else if (*p1 > *p2 || p1 >= p + (arrSize + 1) / 2)
+		{
+			*pNew++ = *p2;
+			p2++;
+		}
+	}
+	for (int i = 0; i < arrSize; i++)
+	{
+		p[i] = pNew_[i];
+	}
 }
-int f1();
-int f2();
+
+void mergeSort(int * p, int arrSize)
+{
+	if (arrSize == 1)
+	{
+		return;
+	}
+	else
+	{
+		mergeSort(p, (arrSize + 1) / 2);
+		mergeSort(p + (arrSize + 1) / 2, arrSize / 2);
+		mergeArray(p, arrSize);
+	}
+}
+
+
 int main()
 {
-
-
+	//REINPUT:
+	int A[80] = {9,7,8,5,8,4,1,2,3,0};
+	//standardInput(A, 10, "A", INT_MIN, INT_MAX, true, true);
+	mergeSort(A, 10);
+	displayArr(&A);
+	//goto REINPUT;
+	return 0;
 }

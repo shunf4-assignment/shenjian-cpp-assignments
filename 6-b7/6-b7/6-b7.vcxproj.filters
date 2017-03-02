@@ -15,13 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sub.cpp">
+    <ClInclude Include="6-b7.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="6-b7-main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="sub2.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="demo.cpp">
+    <ClCompile Include="6-b7-sub.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

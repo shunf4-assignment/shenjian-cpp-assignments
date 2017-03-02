@@ -342,6 +342,7 @@ void part7GraphicFull(bool keyBoard)
 				if (*path == 0)
 				{
 					//No path.
+					printf("\a");
 					cout << "找不到路。" << endl;
 				}
 				else
@@ -389,8 +390,11 @@ void part9()
 		int X = 0, Y = 0;
 		int action;
 		int loop = 1;
+		int a = 1;
+		int b = 1;
 		int bothClicked = -1;
 		int onceClicked = -1;
+		bool x = false;
 		DWORD lastTick = GetTickCount();
 		DWORD currTick = GetTickCount();
 		restoreColor();
@@ -405,77 +409,36 @@ void part9()
 		while (loop) {
 			/* 读鼠标，返回值为下述操作中的某一种, 当前鼠标位置在<X,Y>处 */
 			action = read_mouse(hin, X, Y, 1);
+			
 			lastTick = currTick;
 			/* 转到第1行进行打印 */
 			gotoxy(hout, 0, 1);
 			cout << "[当前光标位置] X:" << setw(2) << X << " Y:" << setw(2) << Y << " 操作:";
-			if(bothClicked != -1)
-				if (bothClicked == 0 && (action == MOUSE_LEFT_BUTTON_CLICK || action == MOUSE_RIGHT_BUTTON_CLICK))
-				{
-					bothClicked = action;
-					continue;
-				}
-				else if (bothClicked == action)
-				{
-					continue;
-				}
-				else 
-				{
-					bothClicked = -1;
-				}
-			if (onceClicked != -1)
-			{
-				if (onceClicked == action)
-				{
-					if ((currTick = GetTickCount()) <= lastTick + 100)
-					{
-						continue;
-					}
-					else
-					{
-						onceClicked = -1;
-					}
-				}
-				else if (action == MOUSE_ONLY_MOVED)
-				{
-					if ((currTick = GetTickCount()) <= lastTick + 100)
-					{
-						continue;
-					}
-					else
-					{
-						switch (onceClicked) {
-							case MOUSE_LEFT_BUTTON_CLICK:			//按下左键
-								cout << "按下左键      " << endl;
-								showch(hout, X, Y, '1', colorList[0], colorList[1]);			//在鼠标指针位置显示1
-								break;
-							case MOUSE_RIGHT_BUTTON_CLICK:			//按下右键
-								cout << "按下右键      " << endl;
-								showch(hout, X, Y, '3', colorList[0], colorList[1]);			//在鼠标指针位置显示3
-								break;
-						}
-						onceClicked = -1;
-						continue;
-					}
-				}
-				else
-				{
-					onceClicked = -1;
-				}
-			}
-			else
-			{
-				if (action == MOUSE_LEFT_BUTTON_CLICK || action == MOUSE_RIGHT_BUTTON_CLICK)
-				{
-					onceClicked = action;
-					currTick = GetTickCount();
-					cout << "              " << endl;
-					continue;
-				}
-			}
+			
+
+
 			switch (action) {
 				case MOUSE_LEFT_BUTTON_CLICK:			//按下左键
 					cout << "按下左键      " << endl;
+					gotoxy(hout, 0, 1);
+					cout << "[当前光标位置] X:" << setw(2) << X << " Y:" << setw(2) << Y << " 操作:";
+					if ((a = read_mouse(hin, X, Y, 1)) == 6 &&( b = read_mouse(hin, X, Y, 1)) == 2)
+					{
+						cout << "双击左键      " << endl;
+						showch(hout, X, Y, '2', colorList[0], colorList[1]);			//在鼠标指针位置显示2
+						break;
+					}
+					else
+					{
+						if (a == 5 || b == 5)
+						{
+							cout << "同时按下左右键" << endl;
+							showch(hout, X, Y, '5', colorList[0], colorList[1]);			//在鼠标指针位置显示5
+							read_mouse(hin, X, Y, 1);
+							read_mouse(hin, X, Y, 1);
+							break;
+						}
+					}
 					showch(hout, X, Y, '1', colorList[0], colorList[1]);			//在鼠标指针位置显示1
 					break;
 				case MOUSE_LEFT_BUTTON_DOUBLE_CLICK:	//双击左键
@@ -483,6 +446,26 @@ void part9()
 					showch(hout, X, Y, '2', colorList[0], colorList[1]);			//在鼠标指针位置显示2
 					break;
 				case MOUSE_RIGHT_BUTTON_CLICK:			//按下右键
+					cout << "按下右键      " << endl;
+					gotoxy(hout, 0, 1);
+					cout << "[当前光标位置] X:" << setw(2) << X << " Y:" << setw(2) << Y << " 操作:";
+					if ((a = read_mouse(hin, X, Y, 1)) == 6 && (b = read_mouse(hin, X, Y, 1)) == 2)
+					{
+						cout << "双击右键      " << endl;
+						showch(hout, X, Y, '4', colorList[0], colorList[1]);			//在鼠标指针位置显示2
+						break;
+					}
+					else
+					{
+						if (a == 5 || b == 5)
+						{
+							cout << "同时按下左右键" << endl;
+							read_mouse(hin, X, Y, 1);
+							read_mouse(hin, X, Y, 1);
+							showch(hout, X, Y, '5', colorList[0], colorList[1]);			//在鼠标指针位置显示5
+							break;
+						}
+					}
 					cout << "按下右键      " << endl;
 					showch(hout, X, Y, '3', colorList[0], colorList[1]);			//在鼠标指针位置显示3
 					break;
@@ -494,7 +477,7 @@ void part9()
 				case MOUSE_LEFTRIGHT_BUTTON_CLICK:		//同时按下左右键
 					cout << "同时按下左右键" << endl;
 					showch(hout, X, Y, '5', colorList[0], colorList[1]);			//在鼠标指针位置显示5
-					bothClicked = 0;
+					read_mouse(hin, X, Y, 1);
 					break;
 				case MOUSE_ONLY_MOVED:
 					cout << "移动          " << endl;

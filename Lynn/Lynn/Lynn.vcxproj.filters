@@ -15,14 +15,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sub.cpp">
+    <ClCompile Include="..\..\..\..\..\SYNC\C++近期末\Lynn\90-b2-console.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="sub2.cpp">
+    <ClCompile Include="..\..\..\..\..\SYNC\C++近期末\Lynn\90-b2-main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="demo.cpp">
+    <ClCompile Include="..\..\..\..\..\SYNC\C++近期末\Lynn\90-b2-tools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\SYNC\C++近期末\Lynn\cmd_console_tools.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\SYNC\C++近期末\Lynn\90-b2-base.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\SYNC\C++近期末\Lynn\90-b2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\SYNC\C++近期末\Lynn\cmd_console_tools.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

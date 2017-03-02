@@ -14,7 +14,7 @@ using namespace std;
 const int CL_MAXGRID = 9;
 const int CL_BALLNUM = 7;
 const char numToLetter[] = " ABCDEFGHIJKLMN";
-const int colorList[] = { COLOR_HWHITE,COLOR_BLACK,COLOR_HRED,COLOR_RED,COLOR_HYELLOW,COLOR_HGREEN,COLOR_HCYAN,COLOR_BLUE,COLOR_HPINK, COLOR_HBLACK, COLOR_WHITE, COLOR_RED, COLOR_PINK };
+const int colorList[] = { COLOR_HWHITE,COLOR_BLACK,COLOR_HRED,COLOR_RED,COLOR_HYELLOW,COLOR_HGREEN,COLOR_HCYAN,COLOR_BLUE,COLOR_HPINK, COLOR_HWHITE, COLOR_WHITE, COLOR_RED, COLOR_PINK };
 const HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE); //取标准输出设备对应的句柄
 const HANDLE hin = GetStdHandle(STD_INPUT_HANDLE);  //取标准输入设备对应的句柄
 const char box[] = "┏━┓┃┗┛";
@@ -100,7 +100,7 @@ int mouseActions(int startX, int startY, int promptX, int promptY, int quitX, in
 int inputMoveByMouse(int(*gameMap)[CL_MAXGRID + 2], int &source, int&dest, int tableStartX, int tableStartY, int promptX, int promptY, int prompt2X, int prompt2Y, int quitX, int quitY, int menuX, int menuY, bool keyBoard);
 int *decodePos(int encoded);
 void decodePos_(int encoded, int &j, int &i);
-void addGraphicalBall(int startX, int startY, int currPos, int ballType, int bgColor, int offset = 4);
+void addGraphicalBall(int startX, int startY, int currPos, int ballType, int bgColor, int offset, bool select);
 void graphicRoute(int(*gameMap)[CL_MAXGRID + 2], int *path, int tableStartX, int tableStartY, int ballType);
 void restoreColor();
 

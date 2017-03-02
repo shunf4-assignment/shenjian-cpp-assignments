@@ -19,18 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="demo.cpp">
+    <ClCompile Include="Merge.cpp">
       <SubType>
       </SubType>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="sub.cpp" />
-    <ClCompile Include="sub2.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8ab7b8d3-7bc2-4165-95fa-5fe56745d480}</ProjectGuid>
-    <RootNamespace>SJDemo</RootNamespace>
+    <ProjectGuid>{d6299470-a8b4-4f5f-8140-37d1d4dd6905}</ProjectGuid>
+    <RootNamespace>MergeSort</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

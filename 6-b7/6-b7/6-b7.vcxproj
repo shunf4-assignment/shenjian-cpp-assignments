@@ -19,18 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="demo.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClInclude Include="6-b7.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sub.cpp" />
-    <ClCompile Include="sub2.cpp" />
+    <ClCompile Include="6-b7-main.cpp" />
+    <ClCompile Include="6-b7-sub.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8ab7b8d3-7bc2-4165-95fa-5fe56745d480}</ProjectGuid>
-    <RootNamespace>SJDemo</RootNamespace>
+    <ProjectGuid>{e9950a04-3084-4bbc-964e-828fd95dfa88}</ProjectGuid>
+    <RootNamespace>_6_b7</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

@@ -9,9 +9,15 @@ void fun2(int (*p)[3])
 {
 	return;
 }
+void fun3(int &a)
+{
+	a = 2;
+	return;
+}
 
 int main()
 {
+	int i = 0;
 	int arr[2][3] = { 1,2,3,4,5,6 };
 	int(*p1)[3] = arr;
 	char *p2 = "China";
@@ -25,6 +31,7 @@ int main()
 
 	fun(arr[0]);
 	fun2(arr);
+	fun3(i);
 
 	return 0;
 
