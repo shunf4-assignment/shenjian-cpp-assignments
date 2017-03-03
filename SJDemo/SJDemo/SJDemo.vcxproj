@@ -24,10 +24,6 @@
       </SubType>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="sub.cpp" />
-    <ClCompile Include="sub2.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8ab7b8d3-7bc2-4165-95fa-5fe56745d480}</ProjectGuid>
     <RootNamespace>SJDemo</RootNamespace>

@@ -41,10 +41,11 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="cmd_console_test.cpp">
+    <None Include="cmd_console_test.cpp">
       <SubType>
       </SubType>
-    </ClCompile>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </None>
     <ClCompile Include="cmd_console_tools.cpp">
       <SubType>
       </SubType>

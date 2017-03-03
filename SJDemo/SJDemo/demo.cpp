@@ -103,6 +103,18 @@ int f1();
 int f2();
 int main()
 {
-
-
+	struct B
+	{
+		int s;
+		int t;
+	};
+	struct A
+	{
+		int x[5][6];
+		B y;
+	};
+	
+	A a = {0};
+	cout << a.x[0][1];
+	return 0;
 }

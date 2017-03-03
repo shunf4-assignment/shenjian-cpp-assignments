@@ -26,9 +26,6 @@
     <ClCompile Include="cmd_console_tools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="cmd_console_test.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="90-b2-base.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -50,6 +47,9 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="源.cpp">
+      <Filter>源文件</Filter>
+    </None>
+    <None Include="cmd_console_test.cpp">
       <Filter>源文件</Filter>
     </None>
   </ItemGroup>
