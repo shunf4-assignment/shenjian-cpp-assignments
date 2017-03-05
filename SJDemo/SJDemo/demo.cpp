@@ -103,18 +103,15 @@ int f1();
 int f2();
 int main()
 {
-	struct B
+	struct X
 	{
-		int s;
-		int t;
+		int a = 1;
+		int b;
 	};
-	struct A
-	{
-		int x[5][6];
-		B y;
-	};
-	
-	A a = {0};
-	cout << a.x[0][1];
+
+	X s1;
+	s1.a = 2;
+	cout << s1.a << endl; //Êä³ö15
+
 	return 0;
 }

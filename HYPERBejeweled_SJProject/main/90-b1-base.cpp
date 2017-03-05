@@ -22,16 +22,34 @@ void initializeMap(Map *map, int wallElement, int spaceElement)
 	}
 }
 
+void initializeMap(SMap *map, int wallElement, int spaceElement)
+{
+	for (int i = 0; i < MAXGRID + 2; i++)
+	{
+		for (int j = 0; j < MAXGRID + 2; j++)
+		{
+			if (i == 0 || j == 0 || i >(*map).w || j >(*map).h)
+				(*map).mapArray[j][i] = wallElement;
+			else
+				(*map).mapArray[j][i] = spaceElement;
+		}
+	}
+}
+
 void printMap(Map *map, Map *overlayMap, bool colourful)
 {
 	int foreColor, backColor;
+	COORD_ start;
+	getxy(hout, start.X, start.Y);
 	restoreColor();
 	cout << "  |";
 	for (int i = 1; i <= map->w; i++)
 	{
 		cout << setw(2) << i;
 	}
-	cout << endl << "--+" << setfill('-') << setw(MAXGRID * 2 + 1) << "" << setfill(' ') << endl;
+	gracefullyReturn(start.X);
+	cout << "--+" << setfill('-') << setw(MAXGRID * 2 + 1) << "" << setfill(' ');
+	gracefullyReturn(start.X);
 
 	for (int j = 1; j <= map->h; j++)
 	{
@@ -56,8 +74,7 @@ void printMap(Map *map, Map *overlayMap, bool colourful)
 
 		}
 		restoreColor();
-
-		cout << endl;
+		coarselyReturn();
 	}
 }
 
@@ -125,6 +142,10 @@ int *getGridPointer(Map *map, const Coord c)
 {
 	return &(map->mapArray[c.y][c.x]);
 }
+int *getGridPointer(SMap *map, const Coord c)
+{
+	return &(map->mapArray[c.y][c.x]);
+}
 
 void checkInARowWithScore(Map *map, Map *oMapP, int *score)
 {
@@ -143,6 +164,24 @@ void checkInARowWithScore(Map *map, Map *oMapP, int *score)
 			}
 		}
 	}
+}
+
+bool isMapEmpty(Map *map)
+{
+	bool empty = true;
+	for (int i = 1; i <= map->w; i++)
+	{
+		for (int j = 1; j <= map->h; j++)
+		{
+			if (map->mapArray[j][i] != 0)
+				empty = false;
+			if (!empty)
+				break;
+		}
+		if (!empty)
+			break;
+	}
+	return empty;
 }
 
 void removeBallsErased(Map *map, Map *oMapP)
@@ -259,4 +298,158 @@ void DFS(Map *oMap, Map *mMap, int *score)
 int scoreGet(int n)
 {
 	return (n-2)*(n-2)*3;
+}
+
+void eliminateIAR(Map *map, Map *oMap, SMap *sMap)
+{
+	Coord c = { 0,0 };
+	//int *tmpP;
+	for (c.y = 1; c.y <= map->h; c.y++)
+	{
+		for (c.x = 1; c.x <= map->w; c.x++)
+		{
+			if (getGrid(oMap, c))
+			{
+				sMap->mapArray[(sMap->pointer[c.x])++][c.x] = rand() % ballNum + 1;
+				*getGridPointer(map, c) = 0;
+			}
+		}
+	}
+}
+
+void enterNew_(Map *map, SMap *sMap)
+{
+//	COORD tmpc;
+	int downOffset = 0;
+	int startZero[MAXGRID + 2] = { 0 };
+	for (int i = 1; i <= sMap->w; i++)
+	{
+		for (int j = 1; j <= sMap->h; j++)
+		{
+			if (map->mapArray[j][i] == 0)
+			{
+				startZero[i] = j;
+				break;
+			}
+		}
+	}
+	for (int i = 1; i <= sMap->w; i++)
+	{
+		for (int j = startZero[i] + sMap->pointer[i] -1; j >= 1; j--)
+		{
+			if (j > sMap->pointer[i])
+				map->mapArray[j][i] = map->mapArray[j - sMap->pointer[i]][i];
+			else
+			{
+				map->mapArray[j][i] = sMap->mapArray[j - 1][i];
+			}
+		}
+	}
+}
+void enterNew(Map *map, SMap *sMap)
+{
+	enterNewMoveDown(NULL, map, sMap);
+}
+
+bool enterCheckIfAny(SMap *sMap, int downOffset)
+{
+	bool any = false;
+	for (int i = 1; i <= sMap->w; i++)
+	{
+		if (sMap->pointer[i] > 0 && sMap->pointer[i] - downOffset > 0)
+		{
+			any = true;
+		}
+	}
+	return any;
+}
+void enterNewMoveDown(Board *b, Map *map, SMap *sMap)
+{
+	COORD tmpc;
+	Coord tmpCoord, *currPosP;
+	int lastZero[MAXGRID + 2], counter = 0;
+
+	if (b != NULL)
+	{
+		currPosP = &(b->currPos);
+	}
+	else
+	{
+		currPosP = &tmpCoord;
+	}
+
+	while (enterCheckIfAny(sMap, 0))
+	{
+		for (int i = 1; i <= sMap->w; i++)
+		{
+			if (sMap->pointer[i] > 0)
+			{
+				/*
+				计算这一列最底下的0对应纵坐标
+				实际上替换成“最底下的那片0的最上面一个0”效率会更高
+				*/
+				for (int j = sMap->h; j >= 1; j--)
+				{
+					if (map->mapArray[j][i] == 0)
+					{
+						lastZero[i] = j;
+						break;
+					}
+				}
+
+				/*上述0上面的所有格子下移半格*/
+				for (int j = lastZero[i] - 1; j >= 0; j--)
+				{
+					tmpc.X = tmpc.Y = 0;
+					*currPosP = { i, j };
+					addGraphicalBall(b, 0, 0, tmpc);
+					tmpc.Y = 1;
+					addGraphicalBall(b, map->mapArray[j][i], 0, tmpc);
+				}
+				/*新球进场半格*/
+				*currPosP = { i , 0 };
+				tmpc.Y = 1;
+				addGraphicalBall(b, sMap->mapArray[sMap->pointer[i] - 1][i], 0, tmpc);
+				
+			}
+		}
+		counter++;
+		if(b)
+			Sleep(calInterval(counter));
+		for (int i = 1; i <= sMap->w; i++)
+		{
+			if (sMap->pointer[i] > 0)
+			{
+
+				/*上述0上面的所有格子再次下移半格到位*/
+				for (int j = lastZero[i]; j >= 1; j--)
+				{
+					
+					tmpc.Y = -1;
+					map->mapArray[j][i] = map->mapArray[j - 1][i];
+					*currPosP = { i, j };
+					addGraphicalBall(b, 0, 0, tmpc);
+					tmpc.Y = 0;
+					addGraphicalBall(b, map->mapArray[j][i], 0, tmpc);
+				}
+
+				/*新球进场到第一格*/
+				*currPosP = { i , 1 };
+				
+				map->mapArray[1][i] = sMap->mapArray[--(sMap->pointer[i])][i];
+				tmpc.Y = -1;
+				addGraphicalBall(b, 0, 0, tmpc);
+				tmpc.Y = 0;
+				addGraphicalBall(b, map->mapArray[1][i], 0, tmpc);
+
+				
+			}
+		}
+		if (b)
+			Sleep(calInterval(counter + 1));
+		counter++;
+	}
+	gotoEndOfBoard(b);
+	restoreColor();
+	gracefullyReturn(b->sc.X);
 }

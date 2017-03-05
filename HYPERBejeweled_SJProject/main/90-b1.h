@@ -14,6 +14,8 @@ using namespace std;
 const int MAXGRID = 9;
 
 /*Structure*/
+//游戏内部的Coord
+//若是Console的坐标，系统已有COORD结构体
 struct Coord
 {
 	int x;
@@ -30,10 +32,41 @@ struct Map
 	Coord dest;
 };
 
+//Substitute MAP
+struct SMap
+{
+	int mapArray[MAXGRID + 2][MAXGRID + 2];
+	int w;
+	int h;
+	int pointer[MAXGRID + 2];
+	//int columns[MAXGRID];
+};
+
+struct COORD_
+{
+	int X;
+	int Y;
+};
+
+struct Board
+{
+	Map *map;
+	COORD_ sc; //Start Coord
+	Coord currPos;
+	int bgColor;
+	int frameColor;
+	int highBgColor;
+};
+
 
 /*Strings*/
 const char numToLetter[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const char directions[] = "\x01\x02\x03\x02\x02\x01\x02\x03\0";
+const char box[] = "┏━┓┃┗┛";
+const char boxIn[] = "┳┣╋┫┻";
+const char * const ballChar = "●◎⊕⊙¤※﹡  ";
+//const char * const ballSel = "";
+
 
 /*Colors*/
 /* common-background, common-foreground, common-highlighted, */
@@ -45,6 +78,9 @@ const int ballColor[] = { 0, COLOR_HYELLOW, COLOR_HPINK, COLOR_HGREEN, COLOR_HCY
 
 const int ballNum = sizeof(ballColor) / sizeof(ballColor[0]) - 1;
 const int directNum = (sizeof(directions) / sizeof(directions[0]) - 1) / 4;
+const int dropInterval = 80;
+const int explodeInterval = 50;
+const double part45Spaces[] = { 0.2,0.4,0.2,0.2 };
 
 
 /*Handles*/
@@ -92,13 +128,21 @@ void inputThing(T* p, const char * promptText, const char * cinUngoodText, const
 /*Tool Function*/
 void startInit();
 void restoreColor();
-void partInit(int part, int w = 0, int h = 0);
+void partInit(int part, int w = 0, int h = 0, int b = 0);
 void pressEnterToContinue(char *p = NULL);
+void gracefullyReturn(int startX);
+void coarselyReturn();
+int calInterval(int count);
+void inputWidthHeight(int &w, int &h);
+COORD_ boardUIWH(Map *map, bool border);
+COORD_ windowWHCal(Map *map, COORD_ boardWH, int mode);
+COORD_ startXYCal(COORD_ boardWH, int mode);
+void gotoEndOfBoard(Board *b);
 
 /*Base Array Function*/
 void coordCopy(Coord *a, Coord *b);
-void initializeMap(Map *map, int wallElement, int spaceElement)
-;
+void initializeMap(Map *map, int wallElement, int spaceElement);
+void initializeMap(SMap *map, int wallElement, int spaceElement);
 void printMap(Map *map, Map *overlayMap, bool colourful);
 void DFS(Map *oMap, Map *mMap, int *score);
 void checkHint(Map *map, Map *oMap);
@@ -110,4 +154,14 @@ int getGrid(const Map *map, const Map *map2 = NULL);
 void checkInARow(Map *map, Map *oMap);
 void initEmerge(Map *map);
 int scoreGet(int n);
+void enterNew(Map *map, SMap *sMap);
+void eliminateIAR(Map *map, Map *oMap, SMap *sMap);
+bool isMapEmpty(Map *map);
+
+/*Graphic Function*/
+void addGraphicalBall(Board *b, int ballType, int ballStatus, COORD offset);
+void enterNewMoveDown(Board *b, Map *map, SMap *sMap);
+void graphicNoInsideBorder(Board *b, Map *oMap);
+void graphicTable(Board *b, bool border, Map *oMap);
+void eliminateIARGraph(Board *b, Map *map, Map *oMap);
 
