@@ -24,7 +24,6 @@ int days(struct Date d)
 
 	dayNoLastMonthEnd += d.day;
 	return dayNoLastMonthEnd;
-
 }
 
 int main()
