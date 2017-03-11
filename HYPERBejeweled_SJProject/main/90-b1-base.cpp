@@ -453,6 +453,10 @@ void enterNewMoveDown(Board *b, Map *map, SMap *sMap)
 			Sleep(calInterval(counter + 1));
 		counter++;
 	}
-	gotoEndOfBoard(b);
-	restoreColor();
+	if (b)
+	{
+		gotoEndOfBoard(b);
+		restoreColor();
+	}
+	
 }

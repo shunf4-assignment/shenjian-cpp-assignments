@@ -6,6 +6,7 @@ void startInit()
 {
 	srand(unsigned int(time(0)));
 	system("color f0");
+	system("title 控制台消消乐 - by 顺子");
 }
 
 void restoreColor()

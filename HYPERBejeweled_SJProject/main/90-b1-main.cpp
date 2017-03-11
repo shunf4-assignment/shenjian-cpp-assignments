@@ -23,10 +23,12 @@ void readMap()
 		strcpy_s(filename, "test\\");
 		strcpy_s(filenameans, "test\\");
 		cout << "请输入要打开的学号（最多10个字符），如输入1652270打开./test/1652270.dat（退出输入q）：";
-		cin.getline(input, 11);
 		
-		cin.putback('h');
-		cin.ignore(FS_MAX_LENGTH, 'h');
+		cin.get(input, 11);
+		
+		cin.ignore(FS_MAX_LENGTH, '\n');
+		cin.putback('\1');
+		cin.ignore(FS_MAX_LENGTH, '\1');
 
 		if (!strcmp(input, "q"))
 		{
@@ -57,9 +59,9 @@ void readMap()
 		initializeMap(&overMap1, -1, 0);
 		initializeMap(&overMap2, -1, 0);
 		
-		for (int i = 1; i <= gameMap.w; i++)
+		for (int j = 1; j <= gameMap.h; j++)
 		{
-			for (int j = 1; j <= gameMap.h; j++)
+			for (int i = 1; i <= gameMap.w; i++)
 			{
 				f >> gameMap.mapArray[j][i];
 				fa >> tmp;
@@ -96,9 +98,9 @@ void readMap()
 		printMap(&gameMap, &overMap2, true);
 		
 		jumpout = false;
-		for (int i = 1; i <= gameMap.w; i++)
+		for (int j = 1; j <= gameMap.h; j++)
 		{
-			for (int j = 1; j <= gameMap.h; j++)
+			for (int i = 1; i <= gameMap.w; i++)
 			{
 				if (overMap1.mapArray[j][i] != overMap2.mapArray[j][i])
 				{
@@ -119,6 +121,8 @@ void readMap()
 			cout << "两个可消除项标示不一致，算法或文件可能有问题。" << endl;
 		}
 		pressEnterToContinue();
+		f.close();
+		fa.close();
 		break;
 	}
 	
@@ -141,6 +145,7 @@ int waitMouse(Board *b)
 	Map overMap = { 0 };
 
 	enable_mouse(hin);
+	
 	overMap.w = b->map->w;
 	overMap.h = b->map->h;
 	initializeMap(&overMap, -1, 0);
@@ -655,9 +660,9 @@ void fullGame(bool extra)
 			lastScore = score;
 			initializeMap(&overMap, -1, 0);
 			if (firstTime)
-				total = checkInARowWithScore(&gameMap, &overMap, NULL);
+				total = checkInARowWithScore(&gameMap, &overMap, NULL, combo);
 			else
-				total = checkInARowWithScore(&gameMap, &overMap, &score);
+				total = checkInARowWithScore(&gameMap, &overMap, &score, combo);
 			if (score - lastScore != 0)
 				thisScore = score - lastScore;
 			if (total != 0)
