@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <windows.h>
+#include <fstream>
 using namespace std;
 #define FS_MAX_LENGTH (numeric_limits<std::streamsize>::max)()
 
@@ -103,15 +104,18 @@ int f1();
 int f2();
 int main()
 {
-	struct X
+	ifstream f;
+	int t, y,m;
+	f.open("Text.txt", ios::in);
+	f >> t;
+	f >> y;
+	for (int i = 0; i < t; i++)
 	{
-		int a = 1;
-		int b;
-	};
-
-	X s1;
-	s1.a = 2;
-	cout << s1.a << endl; //Êä³ö15
-
+		for (int j = 0; j < y; j++)
+		{
+			f >> m;
+		}
+	}
+	cout << m;
 	return 0;
 }
