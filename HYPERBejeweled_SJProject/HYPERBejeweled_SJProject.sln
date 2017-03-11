@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "main", "main\main.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ULTRACOLORLINEZ_SJHomeworkProject2", "..\ULTRACOLORLINEZ_SJHomeworkProject2\ULTRACOLORLINEZ_SJHomeworkProject2\ULTRACOLORLINEZ_SJHomeworkProject2.vcxproj", "{989D9D84-B7DB-4FB3-9776-47EA1D8F6301}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testmouse", "testmouse\testmouse.vcxproj", "{8E9A7709-C0BE-49B4-96BE-4C2CFD2C89ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{989D9D84-B7DB-4FB3-9776-47EA1D8F6301}.Release|x64.Build.0 = Release|x64
 		{989D9D84-B7DB-4FB3-9776-47EA1D8F6301}.Release|x86.ActiveCfg = Release|Win32
 		{989D9D84-B7DB-4FB3-9776-47EA1D8F6301}.Release|x86.Build.0 = Release|Win32
+		{8E9A7709-C0BE-49B4-96BE-4C2CFD2C89ED}.Debug|x64.ActiveCfg = Debug|x64
+		{8E9A7709-C0BE-49B4-96BE-4C2CFD2C89ED}.Debug|x64.Build.0 = Debug|x64
+		{8E9A7709-C0BE-49B4-96BE-4C2CFD2C89ED}.Debug|x86.ActiveCfg = Debug|Win32
+		{8E9A7709-C0BE-49B4-96BE-4C2CFD2C89ED}.Debug|x86.Build.0 = Debug|Win32
+		{8E9A7709-C0BE-49B4-96BE-4C2CFD2C89ED}.Release|x64.ActiveCfg = Release|x64
+		{8E9A7709-C0BE-49B4-96BE-4C2CFD2C89ED}.Release|x64.Build.0 = Release|x64
+		{8E9A7709-C0BE-49B4-96BE-4C2CFD2C89ED}.Release|x86.ActiveCfg = Release|Win32
+		{8E9A7709-C0BE-49B4-96BE-4C2CFD2C89ED}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

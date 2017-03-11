@@ -118,7 +118,13 @@ void addGraphicalBall(Board *b, int ballType, int ballStatus, COORD offset)
 {
 	if (b == NULL)
 		return;
-	gotoxy(hout, b->sc.X + 4 * b->currPos.x - 2 + offset.X, b->sc.Y + 2 * b->currPos.y - 1 + offset.Y);
+	
+	gotoxy(hout, b->sc.X + 4 * b->currPos.x - 2 + offset.X *2, b->sc.Y + 2 * b->currPos.y - 1 + offset.Y);
+	if (ballType == -1)
+	{
+		ballType = getGrid(b->map, b->currPos);
+	}
+
 	if (ballType != 0)
 	{
 		setcolor(hout, b->bgColor, ballColor[ballType]);
@@ -127,7 +133,7 @@ void addGraphicalBall(Board *b, int ballType, int ballStatus, COORD offset)
 	else 
 	{
 		setcolor(hout, b->bgColor, b->frameColor);
-		if (offset.X != 0 || offset.Y != 0)
+		if (abs(offset.X) == 1 || abs(offset.Y) == 1)
 			cout << box[(offset.Y != 0) ? 2 : 6] << box[(offset.Y != 0) ? 3 : 7];
 		else
 			cout << "  ";
@@ -157,4 +163,20 @@ void eliminateIARGraph(Board *b, Map *map, Map *oMap)
 	gotoEndOfBoard(b);
 	restoreColor();
 	gracefullyReturn(b->sc.X);
+}
+
+Coord getCoordonBoard(Board *b, COORD *c)
+{
+	Coord r;
+	r.x = (c->X - b->sc.X + 2) / 4;
+	r.y = (c->Y - b->sc.Y + 1) / 2;
+	//gotoxy(hout, 0, 0);
+	if ((c->X - b->sc.X + 2) % 4 > 2 || (c->Y - b->sc.Y + 1) % 2 == 1 || c->X - b->sc.X <= 1 || r.x > b->map->w || c->Y - b->sc.Y < 1 || r.y > b->map->h)
+	{
+		r.x = 0;
+		r.y = 0;
+	}
+	//cout << r.x << "," << r.y;
+
+	return r;
 }

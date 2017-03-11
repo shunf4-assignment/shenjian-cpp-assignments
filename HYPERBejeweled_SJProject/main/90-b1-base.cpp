@@ -147,9 +147,10 @@ int *getGridPointer(SMap *map, const Coord c)
 	return &(map->mapArray[c.y][c.x]);
 }
 
-void checkInARowWithScore(Map *map, Map *oMapP, int *score)
+int checkInARowWithScore(Map *map, Map *oMapP, int *score, int combo)
 {
 	checkInARow(map, oMapP);
+	int total = 0;
 	Map oMap = *oMapP;
 	Map mMap = { {0}, map->w, map->h };
 	initializeMap(&mMap, -1, 0);
@@ -160,10 +161,11 @@ void checkInARowWithScore(Map *map, Map *oMapP, int *score)
 		{
 			if (getGrid(&mMap, &oMap) != 1 && getGrid(&oMap) == 1)
 			{
-				DFS(&oMap, &mMap, score);
+				total = DFS(&oMap, &mMap, score, combo);
 			}
 		}
 	}
+	return total;
 }
 
 bool isMapEmpty(Map *map)
@@ -264,7 +266,7 @@ void checkHint(Map *map, Map *oMap)
 }
 
 
-void DFS(Map *oMap, Map *mMap, int *score)
+int DFS(Map *oMap, Map *mMap, int *score, int combo)
 {
 	Coord c = oMap->sel;
 	Coord cStack[MAXGRID * MAXGRID] = { {0,0} };
@@ -292,12 +294,14 @@ void DFS(Map *oMap, Map *mMap, int *score)
 			}
 		}
 	}
-	*score += scoreGet(total);
+	if(score)
+		*score += int(comboList(combo) * scoreGet(total));
+	return total;
 }
 
 int scoreGet(int n)
 {
-	return (n-2)*(n-2)*3;
+	return int(8*log(n));
 }
 
 void eliminateIAR(Map *map, Map *oMap, SMap *sMap)
@@ -451,5 +455,4 @@ void enterNewMoveDown(Board *b, Map *map, SMap *sMap)
 	}
 	gotoEndOfBoard(b);
 	restoreColor();
-	gracefullyReturn(b->sc.X);
 }

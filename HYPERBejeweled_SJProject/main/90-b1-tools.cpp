@@ -20,6 +20,13 @@ void gracefullyReturn(int startX)
 	gotoxy(hout, startX, start.Y + 1);
 }
 
+void gracefullyReturn()
+{
+	COORD_ start;
+	getxy(hout, start.X, start.Y);
+	gotoxy(hout, start.X, start.Y + 1);
+}
+
 void coarselyReturn()
 {
 	COORD_ start;
@@ -27,12 +34,12 @@ void coarselyReturn()
 	gotoxy(hout, 0, start.Y + 1);
 }
 
-int calInterval_(int count)
+int calInterval(int count)
 {
 	return (int)(dropInterval * (sqrt(count + 1) - sqrt(count)));
 }
 
-int calInterval(int count)
+int calInterval_(int count)
 {
 	return (int)(dropInterval );
 }
@@ -134,4 +141,29 @@ COORD_ startXYCal(COORD_ boardWH, int mode)
 void gotoEndOfBoard(Board *b)
 {
 	gotoxy(hout, 0, b->sc.Y + b->map->h * 2 + 1);
+}
+
+
+void clearLines(int line)
+{
+	int cols, lines, buffer_coles, buffer_lines, x, y;
+	getconsoleborder(hout, cols, lines, buffer_coles, buffer_lines);
+	getxy(hout, x, y);
+	cout << setw(cols - x) << "";
+	line--;
+	for (int i = 0; i < line; i++)
+	{
+		cout << setw(cols) << "";
+	}
+	gotoxy(hout, x, y);
+}
+
+int sgn(int x)
+{
+	return (x > 0 ? 1 : (x == 0 ? 0 : -1));
+}
+
+double comboList(int combo)
+{
+	return pow(1.5, combo);
 }
