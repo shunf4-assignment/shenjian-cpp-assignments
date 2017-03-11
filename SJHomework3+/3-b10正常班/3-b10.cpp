@@ -1,0 +1,421 @@
+/* 1652270 计算机2班 冯舜 */
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	double inputNum, inputNumCopy;
+	int d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, dm1, dm2, toOut;
+	bool startToPrintOut = false;  //用来指示程序有没有开始输出了，没有这个的话，输出"10"会当作前面有东西进而输出“零拾”
+
+	cout << "请输入待转换的金额数：(0.01到100亿) ";
+	cin >> inputNum;
+	inputNumCopy = inputNum;
+
+	inputNumCopy -= (d10 = (int)(inputNumCopy / 1e9)) * 1e9;
+	inputNumCopy -= (d9 = (int)(inputNumCopy / 1e8)) * 1e8;
+	inputNumCopy -= (d8 = (int)(inputNumCopy / 1e7)) * 1e7;
+	inputNumCopy -= (d7 = (int)(inputNumCopy / 1e6)) * 1e6;
+	inputNumCopy -= (d6 = (int)(inputNumCopy / 1e5)) * 1e5;
+	inputNumCopy -= (d5 = (int)(inputNumCopy / 1e4)) * 1e4;
+	inputNumCopy -= (d4 = (int)(inputNumCopy / 1e3)) * 1e3;
+	inputNumCopy -= (d3 = (int)(inputNumCopy / 1e2)) * 1e2;
+	inputNumCopy -= (d2 = (int)(inputNumCopy / 1e1)) * 1e1;
+	inputNumCopy -= (d1 = (int)(inputNumCopy));
+
+	inputNumCopy = (int)(inputNumCopy * 100 + 0.5);
+	inputNumCopy -= (dm1 = (int)(inputNumCopy / 10)) * 10;
+	inputNumCopy -= (dm2 = (int)(inputNumCopy));
+
+	cout << "分解结果：" << endl;
+	cout << "\t十亿位： " << d10 << endl;
+	cout << "\t  亿位： " << d9 << endl;
+	cout << "\t千万位： " << d8 << endl;
+	cout << "\t百万位： " << d7 << endl;
+	cout << "\t十万位： " << d6 << endl;
+	cout << "\t  万位： " << d5 << endl;
+	cout << "\t  千位： " << d4 << endl;
+	cout << "\t  百位： " << d3 << endl;
+	cout << "\t  十位： " << d2 << endl;
+	cout << "\t    圆： " << d1 << endl;
+	cout << "\t    角： " << dm1 << endl;
+	cout << "\t    分： " << dm2 << endl;
+	cout << "大写：" ;
+
+	//处理十亿位和亿位
+	if (d10)
+	{
+		toOut = d10;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		cout << "拾";
+		startToPrintOut = true;
+	}
+	if (d9)
+	{
+		toOut = d9;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		startToPrintOut = true;
+	}
+	if (d10 != 0 || d9 != 0)
+	{
+		cout << "亿";
+	}
+
+	//处理“万”
+	if (d8)
+	{
+		toOut = d8;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		cout << "仟";
+		startToPrintOut = true;
+	}
+	else
+	{
+		if (d7 != 0 || d6 != 0 || d5 != 0)
+		{
+			if(startToPrintOut)
+				cout << "零";
+		}
+	}
+
+	if (d7)
+	{
+		toOut = d7;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		cout << "佰";
+		startToPrintOut = true;
+	}
+	else
+	{
+		if ((d6 != 0 || d5 != 0) && (d8 != 0))
+		{
+			if (startToPrintOut)
+				cout << "零";
+		}
+	}
+
+	if (d6)
+	{
+		toOut = d6;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		cout << "拾";
+		startToPrintOut = true;
+	}
+	else
+	{
+		if ((d5 != 0) && (d7 != 0))
+		{
+			if (startToPrintOut)
+				cout << "零";
+		}
+	}
+
+	if (d5)
+	{
+		toOut = d5;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		startToPrintOut = true;
+	}
+	if (d8 != 0 || d7 != 0 || d6 != 0 || d5 != 0)
+	{
+		startToPrintOut = true;
+		cout << "万";
+	}
+
+	//处理“圆”
+	if (d4)
+	{
+		toOut = d4;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		cout << "仟";
+		startToPrintOut = true;
+	}
+	else
+	{
+		if (d3 != 0 || d2 != 0 || d1 != 0)
+		{
+			if (startToPrintOut)
+				cout << "零";
+		}
+	}
+
+	if (d3)
+	{
+		toOut = d3;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		cout << "佰";
+		startToPrintOut = true;
+	}
+	else
+	{
+		if ((d2 != 0 || d1 != 0) && (d4 != 0))
+		{
+			if (startToPrintOut)
+				cout << "零";
+		}
+	}
+
+	if (d2)
+	{
+		toOut = d2;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		cout << "拾";
+		startToPrintOut = true;
+	}
+	else
+	{
+		if ((d1 != 0) && (d3 != 0))
+		{
+			if (startToPrintOut)
+				cout << "零";
+		}
+	}
+
+	if (d1)
+	{
+		toOut = d1;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		startToPrintOut = true;
+	}
+	if (d10 || d9 || d8 || d7 || d6 || d5 || d4 || d3 || d2 || d1)
+		cout << "圆";
+
+	//处理角和分
+	//发现没有，要输出“整”字的充要条件是：分为0，并且整个数不为0.
+	if (dm1)
+	{
+		toOut = dm1;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		cout << "角";
+		startToPrintOut = true;
+	}
+	else
+	{
+		if ((d10 || d9 || d8 || d7 || d6 || d5 || d4 || d3 || d2 || d1) && dm2)
+			if (startToPrintOut)
+				cout << "零";
+	}
+
+	if (dm2)
+	{
+		toOut = dm2;
+		if (toOut == 1)
+			cout << "壹";
+		if (toOut == 2)
+			cout << "贰";
+		if (toOut == 3)
+			cout << "叁";
+		if (toOut == 4)
+			cout << "肆";
+		if (toOut == 5)
+			cout << "伍";
+		if (toOut == 6)
+			cout << "陆";
+		if (toOut == 7)
+			cout << "柒";
+		if (toOut == 8)
+			cout << "捌";
+		if (toOut == 9)
+			cout << "玖";
+		cout << "分";
+		startToPrintOut = true;
+	}
+	else
+	{
+		if (inputNum)
+			cout << "整";
+	}
+
+	if (!(inputNum))
+		cout << "零圆整";
+
+	cout << endl;
+	return 0;
+}
