@@ -180,3 +180,12 @@ Coord getCoordonBoard(Board *b, COORD *c)
 
 	return r;
 }
+
+void printCoord(Board *b, Coord c)
+{
+	gotoHeadOfBoard(b);
+	clearLines(1);
+	restoreColor();
+	cout << setw(3) << "";
+	cout << "当前鼠标位置：(" << numToLetter[ c.y - 1 ] << ", " << c.x << ")";
+}

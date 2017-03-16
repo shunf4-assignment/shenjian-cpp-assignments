@@ -135,13 +135,13 @@ int waitMouse(Board *b)
 	INPUT_RECORD    mouseRec;
 	DWORD           res;
 	COORD           stPos, nwPos, edPos, tmp1, tmp2;
-	Coord			source, dest;
+	Coord			source, dest, tmpC, tmpD = {0,0};
 	int				xD, yD;
 	short * dimenToChange;
 	int * dimenToChange2, tmps1, tmps2;
 	int * dimenToComp;
 	int returnFlag = 0;
-	//0 - fail to do anything, 1 - swap with a success
+	//0 - fail to do anything, 1 - swap with a success, 2 - exit
 	Map overMap = { 0 };
 
 	enable_mouse(hin);
@@ -155,13 +155,21 @@ int waitMouse(Board *b)
 		ReadConsoleInput(hin, &mouseRec, 1, &res);
 		if (mouseRec.EventType != MOUSE_EVENT)
 			continue;
-
+		if (mouseRec.Event.MouseEvent.dwEventFlags == MOUSE_MOVED)
+		{
+			tmp1 = mouseRec.Event.MouseEvent.dwMousePosition;
+			tmpC = getCoordonBoard(b, &tmp1);
+			if(tmpC.x && tmpC.y && (tmpC.x != tmpD.x || tmpC.y != tmpD.y))
+				printCoord(b, getCoordonBoard(b, &tmp1));
+			tmpD = tmpC;
+		}
 		if (mouseRec.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 		{
 			dragEnd = false;
 			everDrag = false;
 			stPos = mouseRec.Event.MouseEvent.dwMousePosition;
 			source = getCoordonBoard(b, &stPos);
+			
 			if (source.x == 0)
 			{
 				continue;
@@ -350,11 +358,33 @@ int waitMouse(Board *b)
 				{
 					COORD_ c1;
 					COORD c1_, t1;
-					Coord;
-					read_mouse(hin, c1.X, c1.Y, 0);
+					//Coord tmpC;
+					int mouseStatus;
+					mouseStatus = read_mouse(hin, c1.X, c1.Y, 1);
+
+					if (mouseStatus == MOUSE_ONLY_MOVED)
+					{
+						c1_.X = c1.X;
+						c1_.Y = c1.Y;
+						tmpC = getCoordonBoard(b, &c1_);
+						if (tmpC.x && tmpC.y && (tmpC.x != tmpD.x || tmpC.y != tmpD.y))
+							printCoord(b, tmpC);
+						tmpD = tmpC;
+					}
+					if (mouseStatus == MOUSE_RIGHT_BUTTON_CLICK)
+					{
+						returnFlag = 2;
+						loop = false;
+						break;
+
+					}
+					else if (mouseStatus != MOUSE_LEFT_BUTTON_CLICK)
+						continue;
+
 					c1_.X = c1.X;
 					c1_.Y = c1.Y;
 					dest = getCoordonBoard(b, &c1_);
+					
 					if (dest.x == 0)
 					{
 						continue;
@@ -426,7 +456,11 @@ int waitMouse(Board *b)
 				}
 			}
 		}
-
+		if (mouseRec.Event.MouseEvent.dwButtonState == RIGHTMOST_BUTTON_PRESSED)
+		{
+			returnFlag = 2;
+			loop = false;
+		}
 	}
 	return returnFlag;
 }
@@ -713,8 +747,15 @@ void fullGame(bool extra)
 			}
 
 			thisTurnMouse = waitMouse(&board);
-
+			if (thisTurnMouse == 2)
+				break;
 		}
+		gotoEndOfBoard(&board);
+		cout << endl << endl;
+
+		getxy(hout, X, Y);
+		clearLines(2);
+		restoreColor();
 		cout << "你要再来一轮吗？(y/n)";
 		sel = false;
 

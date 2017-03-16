@@ -151,6 +151,7 @@ void clearLines(int line);
 int sgn(int x);
 double comboList(int combo);
 
+
 /*Base Array Function*/
 void coordCopy(Coord *a, Coord *b);
 void initializeMap(Map *map, int wallElement, int spaceElement);
@@ -177,4 +178,5 @@ void enterNewMoveDown(Board *b, Map *map, SMap *sMap);
 void graphicNoInsideBorder(Board *b, Map *oMap);
 void graphicTable(Board *b, bool border, Map *oMap);
 void eliminateIARGraph(Board *b, Map *map, Map *oMap);
-
+void gotoHeadOfBoard(Board *b);
+void printCoord(Board *b, Coord c);

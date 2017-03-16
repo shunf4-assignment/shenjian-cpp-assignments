@@ -144,6 +144,11 @@ void gotoEndOfBoard(Board *b)
 	gotoxy(hout, 0, b->sc.Y + b->map->h * 2 + 1);
 }
 
+void gotoHeadOfBoard(Board *b)
+{
+	gotoxy(hout, 0, b->sc.Y - 1);
+}
+
 
 void clearLines(int line)
 {
