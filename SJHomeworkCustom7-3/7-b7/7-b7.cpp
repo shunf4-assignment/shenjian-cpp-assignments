@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <ctime>
+#include <cstring>
 using namespace std;
 #define FS_MAX_LENGTH (numeric_limits<std::streamsize>::max)()
 

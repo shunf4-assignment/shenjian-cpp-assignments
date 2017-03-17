@@ -1,6 +1,8 @@
 /* 1652270 ¼ÆËã»ú2°à ·ëË´ */
 #include <iostream>
 #include <iomanip>
+#include <cstring>
+
 using namespace std;
 #define FS_MAX_LENGTH (numeric_limits<std::streamsize>::max)()
 
