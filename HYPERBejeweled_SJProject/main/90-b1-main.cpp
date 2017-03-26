@@ -23,12 +23,14 @@ void readMap()
 		strcpy_s(filename, "test\\");
 		strcpy_s(filenameans, "test\\");
 		cout << "请输入要打开的学号（最多10个字符），如输入1652270打开./test/1652270.dat（退出输入q）：";
-		
 		cin.get(input, 11);
-		
+		cin.clear();
 		cin.ignore(FS_MAX_LENGTH, '\n');
-		cin.putback('\1');
-		cin.ignore(FS_MAX_LENGTH, '\1');
+		cin.sync();
+
+		//cin.putback('a');
+		//cin.ignore(FS_MAX_LENGTH, 'a');
+		//cin.ignore();
 
 		if (!strcmp(input, "q"))
 		{

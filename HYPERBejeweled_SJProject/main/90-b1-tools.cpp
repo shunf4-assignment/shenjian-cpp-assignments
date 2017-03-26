@@ -85,8 +85,8 @@ void pressEnterToContinue(char *p)
 
 void inputWidthHeight(int &w, int &h)
 {
-	inputThing(&w, "请输入游戏区域的宽(7-9)：", "输入非法！", "输入超过限制！", 7, 9, true);
-	inputThing(&h, "请输入游戏区域的高(7-9)：", "输入非法！", "输入超过限制！", 7, 9, true);
+	inputThing(&w, "请输入游戏区域的宽(5-9)：", "输入非法！", "输入超过限制！", 5, 9, true);
+	inputThing(&h, "请输入游戏区域的高(5-9)：", "输入非法！", "输入超过限制！", 5, 9, true);
 }
 
 COORD_ boardUIWH(Map *map, bool border)
