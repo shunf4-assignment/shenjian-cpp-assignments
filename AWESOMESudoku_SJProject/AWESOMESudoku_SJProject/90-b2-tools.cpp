@@ -36,6 +36,7 @@ int charSelFile(char * const fileName)
 	}
 	cout << "当前目录下的数独数据文件有：" << endl;
 	itemPrint(files);
+	itemFree(files);
 	cout << endl << "请输入加载的文件名(最多读取25字符)：";
 	cin.get(input, 26);
 	cin.clear();
@@ -49,4 +50,24 @@ int charSelFile(char * const fileName)
 
 	strcpy(fileName, input);
 	return 0;
+}
+
+void clearLines(int line)
+{
+	int cols, lines, buffer_coles, buffer_lines, x, y;
+	getconsoleborder(hout, cols, lines, buffer_coles, buffer_lines);
+	getxy(hout, x, y);
+	cout << setw(cols - x) << "";
+	line--;
+	for (int i = 0; i < line; i++)
+	{
+		cout << setw(cols) << "";
+	}
+	gotoxy(hout, x, y);
+}
+
+void printLine(const char * const str, int line)
+{
+	clearLines(line);
+	cout << str << endl;
 }
