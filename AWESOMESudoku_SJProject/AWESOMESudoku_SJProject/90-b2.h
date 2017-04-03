@@ -130,7 +130,6 @@ int itemCount(item *head);
 void itemsDraw(listbox *l);
 void itemsUpdate(listbox *l, int lastIndex, int lastTop);
 int boxDraw(listbox *l);
-int boxWaitInput(listbox *l, int *lastIndex, int* lastTop);
 int getFileList(item *&items, listbox *l);
 int itemPrint(item *head);
 void initSudoku(Sudoku *s, int wallElement, int spaceElement);
@@ -173,7 +172,6 @@ void startInit();
 
 /*Graphics*/
 void printBoard(Board *b);
-int emptyTrig(INPUT_RECORD iRec, void **args);
 int selTrig(INPUT_RECORD iRec, void**args);
 void cleanInputBox(COORD inputPos);
 int boardTrig(INPUT_RECORD iRec, void **args);

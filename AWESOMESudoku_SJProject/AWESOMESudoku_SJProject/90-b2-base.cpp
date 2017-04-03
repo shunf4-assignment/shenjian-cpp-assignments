@@ -741,7 +741,9 @@ int depthSearch(SudokuValue *v, int *dfsArgs, Board *b)
 		d = arrange[dx - 1];
 		if (v->t[minJ][minI] & (1 << d))
 		{
-			vp = new SudokuValue;
+			vp = new(nothrow) SudokuValue;
+			if (!vp)
+				return -1;
 			*vp = *v;
 			status = squareAssign(vp, minJ, minI, d);
 			if (status == -2)
@@ -767,6 +769,11 @@ int depthSearch(SudokuValue *v, int *dfsArgs, Board *b)
 				dfsArgs[3] = dfsArgs[2];
 			status = depthSearch(vp, dfsArgs, b);
 			dfsArgs[2]--;
+			if (status == -1)
+			{
+				delete vp;
+				return -1;
+			}
 			if (status != -2)
 			{
 				*v = *vp;

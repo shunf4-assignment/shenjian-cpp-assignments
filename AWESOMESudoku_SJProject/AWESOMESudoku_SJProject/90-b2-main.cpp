@@ -549,7 +549,13 @@ int autoGame(int mode, bool refreshEvery)
 			cout << endl;
 			clearLines(1, 56);
 		}
-		if (status == -2)
+		if (status == -1)
+		{
+			gotoxy(hout, bulletin.X, bulletin.Y);
+			clearLines(1, 56);
+			cout << "ÄÚ´æºÄ¾¡£¡";
+		}
+		else if (status == -2)
 		{
 			gotoxy(hout, bulletin.X, bulletin.Y);
 			clearLines(1, 56);
