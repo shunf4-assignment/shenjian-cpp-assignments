@@ -13,6 +13,7 @@ int graphOpenFile(Sudoku *initial, COORD bulletin, COORD filePos, COORD fileWH)
 	Clickable *clickable[2] = { &boxClick, NULL };
 	int lastIndex, lastTop, inputStatus = -1;
 	void * args[4] = { &fileList, &lastIndex, &lastTop, NULL };
+	bool success = true;
 
 	fileList.h = fileWH.Y;
 	fileList.w = fileWH.X;
@@ -48,7 +49,8 @@ int graphOpenFile(Sudoku *initial, COORD bulletin, COORD filePos, COORD fileWH)
 		{
 			//Empty Directory
 			clearLines(1);
-			cout << "当前文件夹内没有sudoku*数据文件。请放入数据文件，然后重新进入。" << endl;
+			cout << "当前文件夹内没有 sudoku* 数据文件。请放入数据文件，然后重新进入。" << endl;
+			success = false;
 			break;
 		}
 
@@ -79,7 +81,8 @@ int graphOpenFile(Sudoku *initial, COORD bulletin, COORD filePos, COORD fileWH)
 	itemFree(fileList.items);
 
 	clearLines(1, 56);
-	cout << "[" << fileName << "]" << " 中数据已经读入。" << endl;
+	if(success)
+		cout << "[" << fileName << "]" << " 中数据已经读入。" << endl;
 
 	return status;
 }
