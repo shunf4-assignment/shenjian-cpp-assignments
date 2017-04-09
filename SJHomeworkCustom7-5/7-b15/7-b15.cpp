@@ -60,7 +60,7 @@ const Data gameData[] = {
 	{ "魅力值", 1, 0,1000000,32 },
 	{ "移动速度", 3, 0,100,44 },
 	{ "攻击速度", 3, 0,100,45 },
-	{ "攻击范围", 3, 0,100,47 },
+	{ "攻击范围", 3, 0,100,46 },
 	{ "攻击力", 2, 0,2000,48 },
 	{ "防御力", 2, 0,2000,50 },
 	{ "敏捷度", 3, 0,100,52 },
@@ -83,7 +83,7 @@ int main()
 	int mode;
 	fstream f;
 	f.open("game.dat", ios::in | ios::out | ios::binary);
-	f.setf(ios::unitbuf);
+	f.setf(ios::unitbuf);			//设置每进行一次输出操作，就刷新一下，和底层同步
 	if (!f.is_open())
 	{
 		cout << "打开 game.dat 失败！";
@@ -217,8 +217,18 @@ void modify(fstream &f, const Data *d)
 		f.read(p, len * sizeof(char));
 		cout << p;
 		cout << endl;
-		cout << "你想把它更改为：（限 " << len << " 字符）";
-		cin.getline(i, (len + 1) * sizeof(char));
+		while (true)
+		{
+			cout << "你想把它更改为：（限 " << len << " 字符）";
+			cin.getline(i, (len + 1) * sizeof(char));
+			if (strlen(i))
+				break;
+			else
+			{
+				cout << "不要输入空字符串。" << endl;
+			}
+		}
+		
 		f.seekp(d->startPoint, ios::beg);
 		f.write(i, (len + 1) * sizeof(char));
 

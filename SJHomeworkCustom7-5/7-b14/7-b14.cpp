@@ -4,28 +4,30 @@
 #include <fstream>
 using namespace std;
 
-#define UNIT 16
-#define UNITGAP 8
-#define ADDRLEN 8
-#define INPUTLEN 200
+#define UNIT 16			//每行的字节数
+#define UNITGAP 8		//隔多少个字节打一个"-"
+#define ADDRLEN 8		//左侧的当前地址长度
+#define INPUTLEN 200	//输入文件名的最长长度
+
 int main(int argc, char **argv)
 {
 	char *fileName;
-	char fileNameBuffer[INPUTLEN + 1];
-	char currLine[UNIT + 1] = { 0 };
+	char fileNameBuffer[INPUTLEN + 1];		//存储输入的文件名
+	unsigned char currLine[UNIT + 1] = { 0 };		//存储每行的字节
+	//system("chcp 437");
 	if (argc == 2)
 	{
 		fileName = argv[1];
 	}
 	else
 	{
-		cout << "请输入文件路径（只取前" << INPUTLEN << "个字符）：";
+		cout << "请输入文件路径（只取前 " << INPUTLEN << " 个字符）：";
 		cin.getline(fileNameBuffer, INPUTLEN + 1);
 		fileName = fileNameBuffer;
 	}
 
 	ifstream fin;
-	int jumpOut;
+	int jumpOut;		//文件在某一行的第 jumpOut 个字节处结束
 	fin.open(fileName, ios::in | ios::binary);
 	if (!fin.is_open())
 	{
@@ -35,7 +37,7 @@ int main(int argc, char **argv)
 	cout << "[ " << fileName << " ]" << endl;
 	cout << setw(ADDRLEN + 1) << "";
 
-
+	//表头 a - f
 	for (int i = 0; i < UNIT; i++)
 	{
 		if (i && i % UNITGAP == 0)
@@ -44,14 +46,16 @@ int main(int argc, char **argv)
 		}
 		cout << setw(3) << setiosflags(ios::uppercase) << hex << i;
 	}
+
 	cout << endl << setfill('0');
+
 	while (!fin.eof())
 	{
-		cout << setw(ADDRLEN) << fin.tellg() << ": ";
+		cout << setw(ADDRLEN) << fin.tellg() << ": ";		//打印当前地址
 		
-		for (int i = 0; i < UNIT; i++)
+		for (int i = 0; i < UNIT; i++)						//读入当前行的每一个字节
 		{
-			jumpOut = -1;
+			jumpOut = -1;									//若文件没有结束，jumpOut默认置为-1
 			currLine[i] = fin.get();
 			if (fin.eof())
 			{
@@ -65,12 +69,16 @@ int main(int argc, char **argv)
 			{
 				cout << " -";
 			}
+
 			if(i)
 				cout << " ";
-			cout << setw(2) << (unsigned int)(unsigned char)currLine[i]  ;
+
+			cout << setw(2) << (unsigned int)currLine[i]  ;
 		}
+
 		cout << "   ";
-		for (int i = 0; i < UNIT; i++)
+
+		for (int i = 0; i < UNIT; i++)						//打印存储在currLine中的原样字节
 		{
 			if (i == jumpOut)
 				break;
@@ -80,7 +88,7 @@ int main(int argc, char **argv)
 				cout << '.';
 		}
 		cout << endl;
-		fin.peek();
+		fin.peek();		//重要。若文件在某一行结尾恰好结束，此时eof不为true。但peek一下会将eof置为true。
 	}
 	fin.close();
 	cout << endl;
