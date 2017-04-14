@@ -93,6 +93,7 @@ int charGame()
 	int status;
 	setconsoleborder(hout, 80, 25, 200);
 	system("cls");
+	startInit();
 	//char *errorStr;
 	ifstream f;
 	Sudoku initial;
@@ -258,6 +259,7 @@ int graphGame()
 	//¶¨Òå×ø±ê
 	setconsoleborder(hout, 100, 39, 39);
 	system("cls");
+	startInit();
 	COORD start;
 	COORD bkfwStart;
 	COORD bulletin = { 4, 31 };
@@ -619,11 +621,13 @@ int main()
 	}
 	
 
-	startInit();
+	
 	while (true)
 	{
 		system("cls");
+		
 		setconsoleborder(hout, 80, 25, 25);
+		startInit();
 
 		mode = 1;
 

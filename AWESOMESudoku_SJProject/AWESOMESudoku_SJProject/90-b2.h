@@ -118,7 +118,7 @@ const HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE); //取标准输出设备对应的句柄
 const HANDLE hin = GetStdHandle(STD_INPUT_HANDLE);  //取标准输入设备对应的句柄
 
 //默认背景，默认前景，字符已填，字符未填，字符冲突，选择高亮，冲突背景
-const int commonColor[] = {COLOR_BLACK, COLOR_WHITE, COLOR_HCYAN, COLOR_HYELLOW, COLOR_HRED, COLOR_HBLACK, COLOR_RED};
+const int commonColor[] = {COLOR_WHITE, COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_HRED, COLOR_HBLACK, COLOR_HWHITE};
 const char numToLetter[] = "abcdefghijklmn";
 
 

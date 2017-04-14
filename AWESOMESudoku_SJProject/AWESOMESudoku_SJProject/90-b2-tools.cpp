@@ -5,7 +5,7 @@
 void startInit()
 {
 	srand(unsigned int(time(0)));
-	system("color 07");
+	system("color 70");
 	system("cls");
 	system("title йЩ╤юсно╥ - by кЁвс");
 }

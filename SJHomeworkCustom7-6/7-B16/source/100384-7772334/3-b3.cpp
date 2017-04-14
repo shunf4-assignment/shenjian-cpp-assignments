@@ -3,34 +3,6 @@
 using namespace std;
 int main()
 {
-	double x,y;
-	int a,b,c,d,e,f,g,h,i,j,k,l;
-	cin>>x;
-	x=x+0.005;
-	a=x/1000000000;
-	b=int(x/100000000)%10;
-	c=int(x/10000000)%10;
-	d=int(x/1000000)%10;
-	e=int(x/100000)%10;
-	f=int(x/10000)%10;
-	g=int(x/1000)%10;
-	h=int(x/100)%10;
-	i=int(x/10)%10;
-	y=x-a*1000000000-b*100000000-c*10000000;
-	j=(int)y%10;
-	k=int(y*10)%10;
-	l=int(y*100)%10;
-	cout<<"Ê®ÒÚÎ»£º"<<a<<endl;
-	cout<<"ÒÚÎ»£º"<<b<<endl;
-	cout<<"Ç§ÍòÎ»£º"<<c<<endl;
-	cout<<"°ÙÍòÎ»£º"<<d<<endl;
-	cout<<"Ê®ÍòÎ»£º"<<e<<endl;
-	cout<<"ÍòÎ»£º"<<f<<endl;
-	cout<<"Ç§Î»£º"<<g<<endl;
-	cout<<"°ÙÎ»£º"<<h<<endl;
-	cout<<"Ê®Î»£º"<<i<<endl;
-	cout<<"¸öÎ»£º"<<j<<endl;
-	cout<<"Ê®·ÖÎ»£º"<<k<<endl;
-	cout<<"°Ù·ÖÎ»£º"<<l<<endl;
-	return 0;
+    /* ÓÃÓÚÌæ»»6-b6µÄĞÂmainº¯Êı; */
+    return 0;
 }
