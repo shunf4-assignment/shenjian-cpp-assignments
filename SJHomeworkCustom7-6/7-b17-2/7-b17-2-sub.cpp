@@ -263,7 +263,7 @@ int whereIsThisGroup(FILE *fp, const char *group_name)
 	toMatch = (char * )malloc((strlen(group_name) + 5) * sizeof(char));
 	strcpy(toMatch, "[");
 	strcat(toMatch, group_name);
-	strcat(toMatch, "]\n");
+	strcat(toMatch, "]\r\n");
 
 	fileLen = fileLength(fp);
 
@@ -485,19 +485,19 @@ char *makeItem(const char * item_name, const void *item_value, enum ITEM_TYPE it
 	switch (item_type)
 	{
 		case TYPE_DOUBLE:
-			sprintf(p, "%g\n", *(double *)item_value);
+			sprintf(p, "%g\r\n", *(double *)item_value);
 			break;
 		case TYPE_INT:
-			sprintf(p, "%d\n", *(int *)item_value);
+			sprintf(p, "%d\r\n", *(int *)item_value);
 			break;
 		case TYPE_CHARACTER:
-			sprintf(p, "%c\n", *(char *)item_value);
+			sprintf(p, "%c\r\n", *(char *)item_value);
 			break;
 		case TYPE_NULL:
-			sprintf(p, "\n");
+			sprintf(p, "\r\n");
 			break;
 		case TYPE_STRING:
-			sprintf(p, "%s\n", (char *)item_value);
+			sprintf(p, "%s\r\n", (char *)item_value);
 			break;
 		default:
 			;
@@ -593,8 +593,9 @@ int group_add(FILE *fp, const char *group_name)
 		toMatch = (char *)calloc(strlen(group_name) + 5, sizeof(char));
 		strcpy(toMatch, "[");
 		strcat(toMatch, group_name);
-		strcat(toMatch, "]\n");
+		strcat(toMatch, "]\r\n");
 		fseek(fp, 0, SEEK_END);
+		fputc('\r', fp);
 		fputc('\n', fp);
 		fwrite(toMatch, strlen(toMatch), 1, fp);
 
@@ -670,6 +671,7 @@ int item_add(FILE *fp, const char *group_name, const char *item_name, const void
 	{
 		clearerr(fp);
 		fseek(fp, 0, SEEK_END);
+		fputc('\r', fp);
 		fputc('\n', fp);
 	}
 	pointerCur = int(ftell(fp));
