@@ -7,9 +7,6 @@
 using namespace std;
 int main()
 {
-	cout<<"this"<<"is";
-	cout<<"a"<<"c++";
-	cout<<"program."<<endl;
-	return 0;
+    /* 用于替换6-b6的新main函数; */
+    return 0;
 }
-/*在运行时会在屏幕上输出：thisisac++program.*/

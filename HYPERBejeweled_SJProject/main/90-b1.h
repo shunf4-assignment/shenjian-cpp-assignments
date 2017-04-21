@@ -84,6 +84,7 @@ const int directNum = (sizeof(directions) / sizeof(directions[0]) - 1) / 4;
 const int dropInterval = 80;
 const int explodeInterval = 50;
 const int swapInvalidInterval = 100;
+const double pi = 3.14159265;
 const double part45Spaces[] = { 0.2,0.4,0.2,0.2 };
 
 

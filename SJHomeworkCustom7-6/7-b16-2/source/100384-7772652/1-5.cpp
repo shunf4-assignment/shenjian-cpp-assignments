@@ -3,9 +3,6 @@
 using namespace std;
 int main()
 {
-	cout<<"This"<<"is";
-	cout<<"a"<<"C++";
-	cout<<"program."<<endl;
-	return 0;
+    /* 用于替换6-b6的新main函数; */
+    return 0;
 }
-/*输出：ThisisaC++program*/
