@@ -20,7 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="99-b1-main.cpp" />
-    <ClCompile Include="99-b1-solution.cpp" />
+    <ClCompile Include="99-b1-solution-.cpp" />
+    <ClCompile Include="99-b1-solution.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7665bed1-1fdb-40e5-8609-935569d258a4}</ProjectGuid>

@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 
+
+
 struct Sudoku
 {
 	short t[11][11];
