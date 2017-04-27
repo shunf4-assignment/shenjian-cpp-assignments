@@ -72,9 +72,9 @@ const COORD clockDatePos = { 100, 240 };
 /*Const Strings*/
 const wchar_t * const fontCommName = L"新宋体";
 const wchar_t * const fontNormalName = L"新宋体";
-const char * const alarmFileName = "clock.ini";
+const char * const alarmFileName = ".\\1652270\\clock.ini";
 const char * const weekDayName = "日一二三四五六";
-const char * const audioFileName = "Marimba-tune-loop-118-bpm.mp3";
+const char * const audioFileName = ".\\1652270\\Marimba-tune-loop-118-bpm.mp3";
 const char * const hintText1 = "ａ－查看闹钟　ｅ－电子时钟";
 const char * const hintText2 = "ｃ－指针时钟　ｑ－退出";
 const char * const fullNumbers = "０１２３４５６７８９－";

@@ -40,7 +40,7 @@ int main()
 
 	Alarm **alarms = NULL;
 	ifstream f;
-	f.open("HZK16", ios::in | ios::binary);
+	f.open(".\\1652270\\HZK16", ios::in | ios::binary);
 	if (!f.is_open())
 	{
 		cout << "ºº×Ö¿âHZK16²»´æÔÚ" << endl;
