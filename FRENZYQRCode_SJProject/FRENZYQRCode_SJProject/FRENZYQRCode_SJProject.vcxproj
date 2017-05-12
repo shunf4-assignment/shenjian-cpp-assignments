@@ -18,6 +18,23 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="90-b4-exist.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="90-b4-main.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="90-b4-myself.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="90-b4.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{d15d22fd-5ae7-428c-b8fd-e93c0cb90451}</ProjectGuid>
     <RootNamespace>FRENZYQRCode_SJProject</RootNamespace>
