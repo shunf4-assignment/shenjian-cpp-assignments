@@ -1,133 +1,221 @@
 /* 1652270 计算机2班 冯舜 */
+/* FRENZYQRCode_SJProject - 90-b4-main.cpp */
 #include "90-b4.h"
 
-template <typename T>
-int len(T &tgt)
-{
-	return sizeof(tgt) / sizeof(tgt[0]);
-}
+#define LEN_MAXBYTES 100
 
-void generatorPoly(int n, GFPoly &resultPoly)
+void QRCode::inputData()
 {
-	unsigned char initialChar[] = { 1 };
-	unsigned char multiplierChar[] = { 0, 0 };
-	resultPoly.clear();
-	resultPoly.createPoly(initialChar, 1, false);
-	GFPoly multiplier;
-	for (int i = 0; i < n; i++)
+	char inputBuf[LEN_MAXBYTES + 1];
+	const char *hints[] = {"数字模式", "字母数字模式", "字节模式（ANSI编码或说ISO 8859-1，建议网址使用）", "字节模式（用UTF-8编码，带BOM）", "字节模式（用UTF-8编码，不带BOM）"};
+	const int modes[] = { MODE_NUM, MODE_ALPHA, MODE_BYTE, MODE_BYTE };
+	cout << "请输入要编码为二维码的数据内容，最长 " << LEN_MAXBYTES << " 字节：";
+	cin.get(inputBuf, LEN_MAXBYTES + 1, '\n');
+	cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
+	cin.sync();
+
+	//cout << "您输入了：" << inputBuf << endl;
+	//check best mode
+	int bestmode = 0;
+	int selectMode = 0;
+	
+	for (char *p = inputBuf; *p; p++)
 	{
-		multiplier.clear();
-		multiplier.createPoly(multiplierChar, len(multiplierChar), true);
-		resultPoly.multiply(multiplier, resultPoly);
-		multiplierChar[1]++;
-	}
-}
+		if (*p < '0' || *p > '9')
 
-void generateRSCode(const unsigned char * inputbuf, int inputbuflen, int RSCodeLength, unsigned char *outputbuf)
-{
-	GFPoly g;
-	GFPoly m(inputbuf, inputbuflen, false);
-	GFPoly f;
-
-	generatorPoly(RSCodeLength, g);
-	f.copyFrom(&m);
-	f.multiply_x(RSCodeLength);
-	f.modby(g, f);
-	f.outputInBuffer(outputbuf);
-}
-
-
-int testRSCode()
-{
-	unsigned char message[] = { 32,91,11,120,209,114,220,77,67,64,236,17,236,17,236,17 };
-	const int rslen = 10;
-	unsigned char rscode[rslen + 1] = "";
-	generateRSCode(message, len(message), rslen, rscode);
-
-	for (unsigned char *p = rscode; p - rscode < rslen; p++)
-	{
-		cout  << int(*p) << " ";
-	}
-	return 0;
-}
-
-
-int maintest()
-{
-	Bits x;
-	int version = 1;
-	int errLevel = ERRLVL_M;
-	int mode = MODE_ALPHA;
-	char *str = "HELLO WORLD";
-	unsigned int mappedNum, lastMapped;
-	unsigned int numToInsert;
-	unsigned int len;
-	unsigned int codewordlen = errBlocks[version - 1][errLevel][TABLE_TOTALCODEWORD];
-	unsigned int rslen = errBlocks[version - 1][errLevel][TABLE_ECCPERBLOCK];
-	bool even = 0;
-	unsigned int tmp;
-	x.writeInBytes(&(modeIndicator[mode]), 4, 1);
-	x.print();
-	len = strlen(str);
-	x.writeInBytes(&len, (countIndicator[version - 1][mode]), 1);
-	x.print();
-	for (char *p = str; *p; p++)
-	{
-		mappedNum = 0;
-		if(*p <= 'z')
-			mappedNum = alphanumericMap[*p];
-		if (mappedNum)
 		{
-			if (even)
+			if (bestmode < 1)
+				bestmode = 1;
+			if (*p >= 0 && *p < 123)
 			{
-				numToInsert = lastMapped * 45 + mappedNum;
-				x.writeInBytes(&numToInsert, 11, 1);
+				if (bestmode < 2 && !alphanumericMap[*p])
+					bestmode = 2;
 			}
-			even = !even;
-			lastMapped = mappedNum;
+			else
+			{
+				if (bestmode < 2)
+					bestmode = 2;
+				if (bestmode < 3 && *p < 0)
+					bestmode = 3;
+			}
+		}
+		
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		cout << i << ". " << hints[i];
+		if (bestmode == i && i != 1)
+			cout << "\t\t(推荐)";
+		if (bestmode == i && i == 1)
+			cout << "\t\t(推荐，如果不介意混淆大小写)";
+		cout << endl;
+	}
+	cout << "请输入想要使用的模式：";
+	for (bool valid = false; valid == false;)
+	{
+		valid = true;
+		cin >> selectMode;
+		if (!cin.good())
+		{
+			cout << "输入非法，请重新输入：";
+			valid = false;
+			cin.clear();
+			cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
+			cin.sync();
+		}
+		else
+		{
+			if (!(selectMode >= 0 && selectMode <= 4))
+			{
+				cout << "输入超出范围，请重新输入：";
+				valid = false;
+			}
 		}
 	}
-	if (even)
+
+	//bool UTF8;
+	UTF8 = (selectMode == 3 || selectMode == 4);
+	UTF8BOM = (selectMode == 4);
+	//int mode;
+	unsigned int dataLen;
+
+	switch (selectMode)
 	{
-		x.writeInBytes(&mappedNum, 6, 1);
+		case 0:
+			mode = MODE_NUM;
+			break;
+		case 1:
+			mode = MODE_ALPHA;
+			break;
+		case 2:
+		case 3:
+		case 4:
+			mode = MODE_BYTE;
+			break;
 	}
-	tmp = codewordlen * 8 - x.getBitLen();
-	numToInsert = 0;
-	if (tmp >= 4)
+
+	if (UTF8)
 	{
-		x.writeInBytes(&numToInsert, 4, 1);
+		dataBuf = new(nothrow) unsigned char[strlen(inputBuf) * 3 / 2 + 2];
+		if (!dataBuf)
+			exit(SOVF);
+		Gb2312ToUtf8(inputBuf, (char *)dataBuf, strlen(inputBuf) * 3 / 2 + 1);
+		cout << "我们把你输入的字符串转成了 UTF-8 编码，在控制台输出如下：" << endl;
+		cout << dataBuf << endl;
 	}
 	else
 	{
-		x.writeInBytes(&numToInsert, tmp, 1);
+		dataBuf = new(nothrow) unsigned char[strlen(inputBuf) + 1];
+		if (!dataBuf)
+			exit(SOVF);
+		strcpy_s((char *)dataBuf, strlen(inputBuf) + 1, inputBuf);
 	}
 
-	if (x.getBitRemainder())
+	dataLen = validCharNum((unsigned char *)dataBuf, mode, UTF8, false);
+	cout << "经过UTF-8编码（可选）和剔除无法表示的字符，实际的数据长度 " << dataLen << "，原数据长度 " << strlen((const char *)inputBuf) << endl;
+
+	//select eclevel
+	char errLevelIn;
+	//unsigned errLevel;
+	cout << "请输入需要的纠错等级(L/M/Q/H)：";
+
+	for (bool valid = false; valid == false;)
 	{
-		x.writeInBytes(&numToInsert, 8 - x.getBitRemainder(), 1);
+		valid = true;
+		cin >> errLevelIn;
+		if (!cin.good())
+		{
+			cout << "输入非法，请重新输入：";
+			valid = false;
+			cin.clear();
+			cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
+			cin.sync();
+		}
+		else
+		{
+			errLevelIn = toupper(errLevelIn);
+			if (!(errLevelIn == 'L' || errLevelIn == 'M' || errLevelIn == 'Q' || errLevelIn == 'H' ))
+			{
+				cout << "输入超出范围，请重新输入：";
+				valid = false;
+			}
+		}
 	}
 
-	tmp = codewordlen - x.getByteLen();
-	for (unsigned int i = 0; i < tmp; i++)
+	switch (errLevelIn)
 	{
-		x.writeInBytes(padBytes + i % 2, 8, 1);
+		case 'L':
+			errLevel = ERRLVL_L;
+			break;
+		case 'M':
+			errLevel = ERRLVL_M;
+			break;
+		case 'Q':
+			errLevel = ERRLVL_Q;
+			break;
+		case 'H':
+			errLevel = ERRLVL_H;
+			break;
+		default:
+			errLevel = ERRLVL_Q;
 	}
-	x.print();
 
-	unsigned char * rscode = new(nothrow) unsigned char[codewordlen];
-
-	generateRSCode(x.getCharBuf(), codewordlen, rslen, rscode);
-
-	for (unsigned char *p = rscode; unsigned(p - rscode) < rslen; p++)
+	//select version
+	unsigned versionMin;
+	unsigned versionInput;
+	for (versionMin = 1; versionMin <= 40; versionMin++)
 	{
-		cout << int(*p) << " ";
+		if (capabilityTable[versionMin - 1][errLevel][mode] >= dataLen)
+			break;
 	}
-	return 0;
+	if (versionMin == 41)
+	{
+		cout << "抱歉，您输入的数据量过大，无法用二维码表示。" << endl;
+		return;
+	}
+	cout << "可以用 " << versionMin << " 及以上的版本号来表达该数字。" << endl;
+	cout << "请输入版本号，范围从 " << versionMin << " 到 40 （含）：";
+	for (bool valid = false; valid == false;)
+	{
+		valid = true;
+		cin >> versionInput;
+		if (!cin.good())
+		{
+			cout << "输入非法，请重新输入：";
+			valid = false;
+			cin.clear();
+			cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
+			cin.sync();
+		}
+		else
+		{
+			if (!(versionInput >= versionMin && versionInput <= 40))
+			{
+				cout << "输入超出范围，请重新输入：";
+				valid = false;
+			}
+		}
+	}
+	version = versionInput;
+
+	char inputDebug[3];
+	cout << "是否显示生成过程中详细内容（Y/y-是，其他或直接回车-否）：";
+	cin.ignore((numeric_limits<std::streamsize>::max)(), '\n');
+	cin.sync();
+	cin.get(inputDebug, sizeof(inputDebug) / sizeof(char), '\n');
+	if (tolower(inputDebug[0]) == 'y')
+		debug = true;
+	else
+		debug = false;
 }
+
+
 
 int main()
 {
-	//cout << alphanumericMap['z'];
-	maintest();
+	QRCode q;
+	q.inputData();
+	q.printQR();
+	system("pause");
 	return 0;
 }

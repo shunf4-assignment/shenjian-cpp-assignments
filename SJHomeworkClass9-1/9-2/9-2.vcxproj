@@ -19,30 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="90-b4-exist.cpp">
+    <ClCompile Include="9-2.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="90-b4-main.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="90-b4-myself.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="cmd_console_test.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="cmd_console_tools.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="90-b4.h" />
-    <ClInclude Include="cmd_console_tools.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{d15d22fd-5ae7-428c-b8fd-e93c0cb90451}</ProjectGuid>
-    <RootNamespace>FRENZYQRCode_SJProject</RootNamespace>
+    <ProjectGuid>{de9a92dd-25cd-4b2a-84c8-4c067bcc1bfb}</ProjectGuid>
+    <RootNamespace>_9_2</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
