@@ -34,6 +34,8 @@ public:
 	void print() const;		//print this bigint
 	bigint &operator=(const string &s);
 	bigint &operator=(const bigint &b);
+	template<typename T>
+	bigint &operator=(const T &b);
 	bigint operator-() const;
 	bigint operator+() const
 	{
@@ -83,4 +85,12 @@ unsigned getHowManyDigits(I i)
 	while (result++, (i /= 10))
 		;
 	return result;
+}
+
+template <typename T>
+bigint & bigint::operator=(const T & b)
+{
+	this->bigint::~bigint();
+	this->bigint::bigint(b);
+	return *this;
 }

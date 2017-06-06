@@ -15,21 +15,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="90-b5-adv.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="90-b5-adv-main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Data.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="90-b5-adv.h">
+    <ClInclude Include="11-b1-date.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="11-b1-time.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="11-b1-datetime.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="11-b1-date.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="11-b1-time.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="11-b1-datetime.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="11-b1-main-testdate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="11-b1-main-testtime.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="11-b1-main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

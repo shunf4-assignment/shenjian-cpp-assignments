@@ -19,24 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="90-b5-adv-main.cpp">
-      <SubType>
-      </SubType>
+    <ClCompile Include="99-xxxxring.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="90-b5-adv.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="90-b5-adv.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Data.txt" />
+    <ClCompile Include="TString-demo.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{e6bbfc12-da53-4bb5-9e59-d980902bf2ea}</ProjectGuid>
-    <RootNamespace>DOOMEDBigint_SJProject</RootNamespace>
+    <ProjectGuid>{779b1b60-ddf0-4cbd-9f12-e36e92939f22}</ProjectGuid>
+    <RootNamespace>SJBonus10_2</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

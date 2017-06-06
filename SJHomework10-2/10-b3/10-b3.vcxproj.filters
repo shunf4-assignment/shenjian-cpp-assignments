@@ -15,20 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="90-b5-adv.cpp">
+    <ClCompile Include="10-b3.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="90-b5-adv-main.cpp">
+    <ClCompile Include="10-b3-main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Data.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="90-b5-adv.h">
+    <ClInclude Include="10-b3.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

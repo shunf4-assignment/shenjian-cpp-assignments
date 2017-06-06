@@ -1,6 +1,6 @@
 /* 1652270 计算机2班 冯舜 */
 /* DOOMEDBigint_SJProject 90-b5.cpp */
-#include "90-b5.h"
+#include "90-b5-adv.h"
 
 #define max(a, b) (a > b)?a:b		//宏定义，取两者中大者
 #define min(a, b) (a < b)?a:b		//宏定义，取两者中小者
@@ -11,6 +11,7 @@
  *	bigint::init(unsigned buflen_, bool negative)
  *		申请 buflen_ 个 int 的空间作为该 bigint 数据的存储区，
  *		同时为该 bigint 设定符号（+/-）。
+ *		【注意：buflen_ 在传参前已经计算过，是按需分配的大小！！因此没有浪费空间！！】
  */
 void bigint::init(unsigned buflen_, bool negative_)
 {
@@ -99,9 +100,9 @@ bigint::bigint(unsigned buflen_, bool negative_)
 bigint::bigint(const bigint & b)
 {
 	init(b.len, b.negative);
-	len = b.len;
+	buflen = len = b.len;
 	writepos = b.writepos;
-	memcpy_s(buf, len * sizeof(int), b.buf, b.len * sizeof(int));
+	memcpy_s(buf, buflen * sizeof(int), b.buf, b.len * sizeof(int));
 }
 
 /*
@@ -217,7 +218,6 @@ void bigint::print() const
 */
 CompVal bigint::compAbs(const bigint & b) const
 {
-	CompVal absComp;
 	int* aPointer,* bPointer;
 
 	//先比较长度，长度小的必小
@@ -448,57 +448,83 @@ void bigint::equalsMul(const bigint &a, const bigint &b)
 void bigint::equalsDiv(const bigint &a, const bigint &b, bigint &remainder)
 {
 	this->bigint::~bigint();
-	remainder = a;
-	bigint b_ = b;
-	remainder.negative = b_.negative = 0;
-	unsigned divLen = a.len - b.len + 1;
-	init(divLen, 0);
-
-	len = divLen;
-	unsigned dividendDigit;
-
-	if (0 == b_.len)
+	CompVal compAB = a.compAbs(b);
+	if ( CompVal::less == compAB)
 	{
-		buf[0] = b_.len / b_.len;
+		remainder = a;
+		*this = 0;
+	}
+	else if (CompVal::equal == compAB)
+	{
+		remainder = 0;
+		*this = 1;
 	}
 	else
-		for (dividendDigit = remainder.len - b_.len; dividendDigit + 1 != 0; dividendDigit--)
+	{
+		remainder = a;
+		bigint b_ = b;
+		remainder.negative = b_.negative = 0;
+		unsigned divLen = a.len - b.len + 1;
+		init(divLen, 0);
+
+		len = divLen;
+		unsigned dividendDigit;
+
+		if (0 == b_.len)
 		{
-			if (remainder < b_)
-				break;
-			//try to estimate this digit of the quotient
-			unsigned approxDividend = remainder.buf[dividendDigit + b_.len - 1];
-			if (remainder.len > dividendDigit + b_.len)
-				approxDividend += remainder.buf[dividendDigit + b_.len] * 10000;
-			unsigned approxDivisor = b_.buf[b_.len - 1];
-			unsigned approxQuot = approxDividend / approxDivisor;
-			//cout << approxDividend << " / " << approxDivisor << " = " << approxQuot << endl;
-			bigint approxQuotAsFactor(dividendDigit + 1, 0);//approxQuot times base^dividendDigit to make product with divisor b_ which later substracts from remainder
-			approxQuotAsFactor.buf[dividendDigit] = approxQuot;
-			approxQuotAsFactor.len = dividendDigit + 1;
-			//cout << "AsAFactor: " << approxQuotAsFactor << endl;
-			bigint tryMultiply;
-			tryMultiply.equalsMul(approxQuotAsFactor, b_);
-			if (tryMultiply > remainder)
-			{
-				approxQuot--;
-				tryMultiply -= b_;
-			}
-			//cout << remainder << " - ";
-			remainder -= tryMultiply;
-			//cout << tryMultiply << " = " ;
-
-			buf[dividendDigit] = approxQuot;
-			remainder.prune();
-			//cout << remainder << endl;
+			buf[0] = b_.len / b_.len;
 		}
+		else
+			for (dividendDigit = remainder.len - b_.len; dividendDigit + 1 != 0; dividendDigit--)
+			{
+				if (remainder < b_)
+					break;
+				//try to estimate this digit of the quotient
+				unsigned approxDividend = remainder.buf[dividendDigit + b_.len - 1];
+				if (remainder.len > dividendDigit + b_.len)
+					approxDividend += remainder.buf[dividendDigit + b_.len] * 10000;
+				unsigned approxDivisor = b_.buf[b_.len - 1];
+				unsigned approxQuot = approxDividend / approxDivisor;
+				/////cout << approxDividend << " / " << approxDivisor << " = " << approxQuot << endl;
+				bigint tryMultiply;
+				do
+				{
+					bigint approxQuotAsFactor(dividendDigit + 1, 0);//approxQuot times base^dividendDigit to make product with divisor b_ which later substracts from remainder
+					approxQuotAsFactor.buf[dividendDigit] = approxQuot;
+					approxQuotAsFactor.len = dividendDigit + 1;
+					/////cout << "AsAFactor: " << approxQuotAsFactor << endl;
 
+					tryMultiply.equalsMul(approxQuotAsFactor, b_);
+					/////cout << "TryMultiply " << tryMultiply << endl;
+
+					if (tryMultiply > remainder)
+					{
+						approxQuot--;
+						/////cout << "Decrease by 1" << endl;
+						/////cout << "approxQuot " << approxQuot << endl;
+						continue;
+					}
+					else
+					{
+						break;
+					}
+				} while (1);
+				/////cout << remainder << " - ";
+				remainder -= tryMultiply;
+				/////cout << tryMultiply << " = " ;
+
+				buf[dividendDigit] = approxQuot;
+				remainder.prune();
+				/////cout << remainder << endl;
+			}
+	}
 	if (a.negative ^ b.negative)
 		negative = true;
 	if (a.negative)
 		remainder.negative = true;
 
 	prune();
+
 }
 
 
@@ -753,6 +779,7 @@ bigint & bigint::operator=(const bigint & b)
 {
 	if (buflen >= b.len)
 	{
+		negative = b.negative;
 		len = b.len;
 		writepos = b.writepos;
 		memcpy_s(buf, buflen * sizeof(int), b.buf, b.len * sizeof(int));
@@ -764,3 +791,4 @@ bigint & bigint::operator=(const bigint & b)
 	}
 	return *this;
 }
+

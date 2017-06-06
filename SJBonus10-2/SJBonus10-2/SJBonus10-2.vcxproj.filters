@@ -15,21 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="90-b5-adv.cpp">
+    <ClCompile Include="TString-demo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="90-b5-adv-main.cpp">
+    <ClCompile Include="99-xxxxring.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Data.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="90-b5-adv.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

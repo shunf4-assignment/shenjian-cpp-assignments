@@ -19,24 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="90-b5-adv-main.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="90-b5-adv.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="10-b3-main.cpp" />
+    <ClCompile Include="10-b3.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="90-b5-adv.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Data.txt" />
+    <ClInclude Include="10-b3.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{e6bbfc12-da53-4bb5-9e59-d980902bf2ea}</ProjectGuid>
-    <RootNamespace>DOOMEDBigint_SJProject</RootNamespace>
+    <ProjectGuid>{64849381-b807-49e3-9fc6-645481e8b3be}</ProjectGuid>
+    <RootNamespace>_10_b3</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
