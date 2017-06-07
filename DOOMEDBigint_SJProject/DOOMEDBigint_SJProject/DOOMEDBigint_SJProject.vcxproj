@@ -19,10 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="90-b5-adv-main.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="90-b5-adv-main.cpp" />
     <ClCompile Include="90-b5-adv.cpp">
       <SubType>
       </SubType>

@@ -13,28 +13,14 @@ private:
 	char *content;
 	int   len;
 
-	/* 根据需要定义所需的成员函数、友元函数等 */
 public:
 	TString();
-	TString(const char *cstr, int len_);
-	TString(int len_);
-	TString(const char *cstr);
-	TString(const TString &str);
 	~TString();
-
-	TString& operator=(const TString &str);
-	TString& operator=(const char *cstr);
-
-	friend istream& operator >> (istream& in, TString &str);
-	friend ostream& operator << (ostream& out, TString &str);
-
-	friend TString operator+ (const TString& str1, const TString &str2);
-	friend bool operator== (const TString& str1, const TString &str2);
-	friend bool operator!= (const TString& str1, const TString &str2);
-
-	TString& operator+=(const TString &str)
+	friend bool operator!=(const TString & str1, const char * str2);
+	template<int s>
+	void operator+=(const char (&cstr)[s])
 	{
-		return (*this = *this + str);
+		len += s;
 	}
 
 	int length()
@@ -43,152 +29,22 @@ public:
 	}
 };
 
-/* 如果有其它全局函数需要声明，写于此处 */
-
-/* 如果有需要的宏定义、只读全局变量等，写于此处 */
-
-/* 给出 TString 类的所有成员函数的体外实现 */
-
 TString::TString()
 {
-	//内部指针为空指针
-	content = nullptr;
+	content = "";
 	len = 0;
-}
-
-TString::TString(const char *cstr)
-{
-	this->TString::TString(cstr, -1);
-}
-
-TString::TString(int len_)
-{
-	len = len_;
-	content = new(nothrow) char[len_ + 1];
-	if (nullptr == content)
-	{
-		//申请失败
-		len = 0;
-		return;
-	}
-	content[len_] = '\0';
-}
-
-TString::TString(const char *cstr, int len_)
-{
-	if (nullptr == cstr)
-	{
-		len = 0;
-		content = nullptr;
-		return;
-	}
-	//复制cstr中的内容
-	if (-1 == len_)
-	{
-		int cstrlen = strlen(cstr);
-		len = cstrlen;
-	}
-	else
-	{
-		len = len_;
-	}
-	content = new(nothrow) char[len + 1];
-	if (nullptr == content)
-	{
-		//申请失败
-		len = 0;
-		return;
-	}
-
-	memcpy_s(content, sizeof(char) * (len + 1), cstr, sizeof(char) * (len + 1));
-}
-
-TString::TString(const TString &str)
-{
-	this->TString::TString(str.content, str.len);
 }
 
 TString::~TString()
 {
-	if (content != nullptr)
-		delete content;
+	;
 }
 
-TString& TString::operator=(const TString &str)
+bool operator!=(const TString & str1, const char * str2)
 {
-	if (nullptr == str.content)
-	{
-		this->~TString();
-		len = 0;
-		content = nullptr;
-		return *this;
-	}
-	if (str.len <= this->len)
-	{
-		len = str.len;
-		memcpy_s(content, sizeof(char) * (len + 1), str.content, sizeof(char) *(len + 1));
-	}
-	else
-	{
-		this->~TString();
-		this->TString::TString(str);
-	}
-	return *this;
-}
-
-TString& TString::operator=(const char *cstr)
-{
-	if (nullptr == cstr)
-	{
-		this->~TString();
-		len = 0;
-		content = nullptr;
-		return *this;
-	}
-	int cstrlen;
-	if ((cstrlen = strlen(cstr)) <= len)
-	{
-		len = cstrlen;
-		memcpy_s(content, sizeof(char) * (len + 1), cstr, sizeof(char) * (len + 1));
-	}
-	else
-	{
-		this->~TString();
-		this->TString::TString(cstr);
-	}
-	return *this;
-}
-
-TString operator+ (const TString& str1, const TString &str2)
-{
-	auto result = TString(str1.len + str2.len);
-	if (str1.content != nullptr)
-		memcpy_s(result.content, result.len + 1, str1.content, sizeof(char) * (str1.len + 1));
-	if (str2.content != nullptr)
-		memcpy_s(result.content + str1.len, result.len - str1.len + 1, str2.content, sizeof(char) * (str2.len + 1));
-	return result;
-}
-
-
-bool operator==(const TString & str1, const TString & str2)
-{
-	char *pstr1, *pstr2;
+	const char *pstr1, *pstr2;
 	pstr1 = str1.content;
-	pstr2 = str2.content;
-	if (nullptr == pstr1)
-		pstr1 = "";
-	if (nullptr == pstr2)
-		pstr2 = "";
-	int result = strcmp(pstr1, pstr2);
-	return (result == 0);
-	//return (strcmp(str1.content, str2.content) == 0);
-}
-
-bool operator!=(const TString & str1, const TString & str2)
-{
-	char *pstr1, *pstr2;
-	pstr1 = str1.content;
-	pstr2 = str2.content;
+	pstr2 = str2;
 	if (nullptr == pstr1)
 		pstr1 = "";
 	if (nullptr == pstr2)
@@ -196,6 +52,13 @@ bool operator!=(const TString & str1, const TString & str2)
 	int result = strcmp(pstr1, pstr2);
 	return (result != 0);
 }
+
+void strcat_(char *str1, const char *str2)
+{
+	*str1 = '\0';
+}
+
+#define strcat strcat_
 
 /* main 函数不允许改动 */
 int main()

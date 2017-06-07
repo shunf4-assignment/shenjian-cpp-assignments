@@ -374,6 +374,9 @@ void bigint::equalsAdd(const bigint &a, const bigint &b)
 			}
 			pushBack(gtrCurDigit);
 		}
+
+		if (carry)
+			pushBack(1);
 	}
 	//²ÃÕû
 	prune();
