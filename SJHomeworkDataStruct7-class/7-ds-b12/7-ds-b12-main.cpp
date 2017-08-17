@@ -70,14 +70,14 @@ void elemCopy<student *, const student *>(student * &dstStu, const student * con
 template<>
 void elemCopy<student *, student *>(student * &dstStu, student * const &srcStu)
 {
-	elemCopy(dstStu, const_cast<const student * const &>(srcStu));
+	elemCopy(dstStu, static_cast<const student * const &>(srcStu));
 }
 
 std::ostream & operator<<(std::ostream & out, const student *& s);
 
 std::ostream & operator<<(std::ostream & out, student *& s)
 {
-	out << const_cast<const student *&>(s);
+	out << reinterpret_cast<const student *&>(s);
 	return out;
 }
 
